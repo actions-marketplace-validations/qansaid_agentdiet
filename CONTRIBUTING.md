@@ -49,6 +49,26 @@ exact.
 4. Conventional commit title: `feat:`, `fix:`, `docs:`, `test:`, `chore:`.
 5. If the change alters output, include the before/after of the affected lines.
 
+## Releasing
+
+Releases are cut from `main` with an immutable semver tag; the tag is the only
+thing that may trigger `.github/workflows/release.yml`:
+
+```bash
+git tag -a v0.1.5 -m "agentdiet 0.1.5"
+git push origin v0.1.5
+```
+
+The workflow stamps that tag into the binary, publishes the archives, and then
+moves the `v1` major tag onto the released commit. `v1` is the ref README tells
+users to pin, so it must always name the newest released commit — it is moved by
+CI and never by hand. Never push `v1` yourself, and never use it as a release
+tag: two tags on one commit make goreleaser publish twice onto the same release.
+
+`go install github.com/indraoverflow/agentdiet@latest` cannot receive ldflags, so
+the binary reads its version from the module build info; both install paths must
+report the same tag (see `resolveVersion` in `main.go`).
+
 ## Reporting a bug
 
 Include the runtime and version (Claude Code, Cursor, Codex, …), the output of

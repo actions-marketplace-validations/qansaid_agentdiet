@@ -31,3 +31,21 @@ jobs:
           # Without it goreleaser resolves the highest tag on the commit, so a
           # commit carrying both vX.Y.Z and the moving v1 publishes to v1.
           GORELEASER_CURRENT_TAG: ${{ github.ref_name }}
+
+  retag-major:
+    # README pins `@v1`, so the major tag must name the newest released commit.
+    # This runs only after a successful publish and pushes a tag that the `tags:`
+    # filter above intentionally ignores — v1 can never start a second release.
+    needs: goreleaser
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: move v1 onto the released commit
+        run: |
+          git tag -f v1 "${{ github.sha }}"
+          git push --force origin refs/tags/v1
+
