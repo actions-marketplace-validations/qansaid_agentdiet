@@ -1,0 +1,50 @@
+name: File not detected
+description: Your agent runtime loads a file that agentdiet does not report.
+title: "detect: "
+labels: ["scope", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when a file your agent actually loads is missing from the report.
+        If the file *is* reported but with the wrong tier, say so below — that is a
+        more serious bug than a missing file.
+  - type: input
+    id: runtime
+    attributes:
+      label: Agent runtime and version
+      placeholder: "Claude Code 2.x / Cursor 1.7 / Codex CLI 0.4"
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: File that should be detected
+      placeholder: ".agents/instructions.md"
+    validations:
+      required: true
+  - type: dropdown
+    id: tier
+    attributes:
+      label: When does the runtime load it?
+      options:
+        - Every request, automatically (always-on)
+        - Only inside a subdirectory (scoped)
+        - Only when the agent opens or invokes it (on-demand)
+        - It declares tools or servers, not text (config)
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: A link to the runtime's documentation, or the output showing it is loaded. Do not paste private repository contents.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: agentdiet version
+      placeholder: "output of agentdiet --version"
+    validations:
+      required: true

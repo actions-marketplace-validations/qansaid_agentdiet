@@ -1,0 +1,71 @@
+name: agentdiet
+description: Measure the context your AI coding agent loads on every request, and fail when it grows past a budget.
+author: indraoverflow
+
+branding:
+  icon: activity
+  color: green
+
+inputs:
+  path:
+    description: Repository path to audit.
+    required: false
+    default: "."
+  max-tokens:
+    description: Fail the job when always-on context exceeds this many tokens. 0 disables the gate.
+    required: false
+    default: "4000"
+  window:
+    description: Context window used for the share column.
+    required: false
+    default: "200000"
+  version:
+    description: agentdiet version to install (any go module version, e.g. latest or v0.1.0).
+    required: false
+    default: latest
+
+outputs:
+  always-on-tokens:
+    description: Tokens injected into every request.
+    value: ${{ steps.audit.outputs.always-on-tokens }}
+  grade:
+    description: A–F grade for the always-on budget.
+    value: ${{ steps.audit.outputs.grade }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-go@v5
+      with:
+        go-version: "1.22"
+        cache: false
+
+    - name: install agentdiet
+      shell: bash
+      run: go install "github.com/indraoverflow/agentdiet@${{ inputs.version }}"
+
+    - name: audit
+      id: audit
+      shell: bash
+      run: |
+        set -o pipefail
+        agentdiet "${{ inputs.path }}" --window "${{ inputs.window }}" --json > agentdiet.json
+        cat agentdiet.json
+        echo "always-on-tokens=$(jq -r '.alwaysOnTokens' agentdiet.json)" >> "$GITHUB_OUTPUT"
+        echo "grade=$(jq -r '.grade' agentdiet.json)" >> "$GITHUB_OUTPUT"
+
+    - name: budget gate
+      shell: bash
+      env:
+        MAX: ${{ inputs.max-tokens }}
+      run: |
+        if [ "$MAX" = "0" ]; then
+          echo "budget gate disabled"
+          exit 0
+        fi
+        tokens=$(jq -r '.alwaysOnTokens' agentdiet.json)
+        if [ "$tokens" -gt "$MAX" ]; then
+          echo "::error::agentdiet: ${tokens} always-on tokens exceeds budget of ${MAX}"
+          exit 1
+        fi
+        echo "agentdiet: ${tokens}/${MAX} always-on tokens"

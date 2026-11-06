@@ -1,0 +1,7 @@
+/agentdiet
+/bin/
+/cover.out
+/dist/
+.gocache/
+.gopath/
+.DS_Store

@@ -1,0 +1,38 @@
+name: Finding is wrong or noisy
+description: A finding fired when it should not, or gave bad advice.
+title: "finding: "
+labels: ["finding", "needs-triage"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Finding
+      options:
+        - duplicate (same paragraph in two files)
+        - near-duplicate (one file contained in another)
+        - oversize (single always-on file above 3,000 tokens)
+        - scope (MCP servers declared)
+        - grade / totals
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: The finding text
+      description: Paste the line starting with "·" and the "→" advice below it.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is wrong
+      description: What did the files actually contain? Minimum reproducing structure is more useful than a full repository.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: agentdiet version
+    validations:
+      required: true
