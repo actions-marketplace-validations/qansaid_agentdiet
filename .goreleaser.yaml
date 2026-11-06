@@ -62,3 +62,49 @@ changelog:
 release:
   draft: false
   prerelease: auto
+  # The release body is what GitHub Marketplace renders as the listing's
+  # "About" section. Goreleaser regenerates the body from the changelog on
+  # every release, so copy pasted into a release by hand is lost at the next
+  # tag. Keep the listing copy here so every published release carries it.
+  # The install snippet pins the moving major tag `v1` on purpose: the
+  # retag-major job in release.yml moves it onto each released commit, so the
+  # snippet never goes stale the way a pinned `@vX.Y.Z` would.
+  footer: |
+    ---
+
+    ### Use it as a step
+
+    ```yaml
+    - uses: indraoverflow/agentdiet@v1
+      with:
+        max-tokens: 4000   # fail the job above this always-on budget; 0 disables the gate
+        window: 200000     # context window for the share column
+    ```
+
+    | input | default | meaning |
+    |---|---|---|
+    | `path` | `.` | repository path to audit |
+    | `max-tokens` | `4000` | fail when always-on tokens exceed this; `0` disables the gate |
+    | `window` | `200000` | context window used for the share column |
+    | `version` | `latest` | agentdiet version to install |
+
+    | output | meaning |
+    |---|---|
+    | `always-on-tokens` | tokens injected into every request |
+    | `grade` | A-F against the budget |
+
+    Deterministic and offline: no API key, no network at audit time. The
+    estimator (prose chars/4.5 + fenced-code chars/3.4, rounded up per segment)
+    is calibrated against `cl100k_base` at a measured MAE of 8%.
+
+    ### Why this exists
+
+    Every agent runtime has a folder of files it loads unconditionally. They
+    grow by accretion — a rule per incident, a table per architecture decision —
+    until the agent spends 12k tokens of attention on stale instructions before
+    it has read the question. `agentdiet` turns that into a number in the CI log
+    and a budget that fails the pull request that would have made it worse.
+
+    MIT licensed. Source, docs, and real sample output:
+    https://github.com/indraoverflow/agentdiet
+
