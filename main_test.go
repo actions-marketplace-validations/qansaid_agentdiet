@@ -62,6 +62,37 @@ func TestVersionFlag(t *testing.T) {
 	}
 }
 
+func TestResolveVersionPrefersLdflagsStamp(t *testing.T) {
+	// goreleaser passes -X main.version={{ .Version }}; that stamp must win
+	// even when the build info carries a module version of its own.
+	if got := resolveVersion("0.1.5", "v0.1.4"); got != "0.1.5" {
+		t.Fatalf("resolveVersion = %q, want the ldflags stamp 0.1.5", got)
+	}
+	if got := resolveVersion("9.9.9-ci", "(devel)"); got != "9.9.9-ci" {
+		t.Fatalf("resolveVersion = %q, want the ldflags stamp 9.9.9-ci", got)
+	}
+}
+
+func TestResolveVersionFallsBackToModuleVersion(t *testing.T) {
+	// `go install module@v0.1.4` cannot pass ldflags; the module version in
+	// the build info is the only honest source, and "v" is trimmed to match
+	// the tarball's `agentdiet 0.1.4` output.
+	if got := resolveVersion("dev", "v0.1.4"); got != "0.1.4" {
+		t.Fatalf("resolveVersion = %q, want 0.1.4", got)
+	}
+	if got := resolveVersion("dev", "v0.1.5-0.20261106031500-abc1234"); got != "0.1.5-0.20261106031500-abc1234" {
+		t.Fatalf("resolveVersion = %q, want the pseudo-version without the leading v", got)
+	}
+}
+
+func TestResolveVersionKeepsDevForSourceBuilds(t *testing.T) {
+	for _, moduleVersion := range []string{"", "(devel)"} {
+		if got := resolveVersion("dev", moduleVersion); got != "dev" {
+			t.Fatalf("resolveVersion(dev, %q) = %q, want dev", moduleVersion, got)
+		}
+	}
+}
+
 func TestFlagsMayFollowThePath(t *testing.T) {
 	dir := t.TempDir()
 	var out, errOut bytes.Buffer

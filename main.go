@@ -7,13 +7,39 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime/debug"
+	"strings"
 
 	"github.com/indraoverflow/agentdiet/internal/audit"
 )
 
 // version is stamped at release time with -X main.version={{.Version}} by
-// goreleaser; a plain `go build` keeps the dev default.
+// goreleaser. Builds that cannot pass ldflags — `go install
+// github.com/indraoverflow/agentdiet@v0.1.4`, which is how action.yml installs
+// the tool — fall back to the module version recorded in the build info, so
+// they still report the tag they came from instead of "dev".
 var version = "dev"
+
+func init() {
+	if bi, ok := debug.ReadBuildInfo(); ok {
+		version = resolveVersion(version, bi.Main.Version)
+	}
+}
+
+// resolveVersion picks the version a binary reports. An ldflags stamp always
+// wins; otherwise the build info's module version is used with its leading "v"
+// trimmed. A source build ("(devel)" or no version) keeps "dev", which is an
+// honest answer for a binary that was never released.
+func resolveVersion(stamped, moduleVersion string) string {
+	if stamped != "dev" {
+		return stamped
+	}
+	v := strings.TrimPrefix(moduleVersion, "v")
+	if v == "" || v == "(devel)" {
+		return stamped
+	}
+	return v
+}
 
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))
