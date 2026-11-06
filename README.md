@@ -13,36 +13,38 @@ request, per 1,000 sessions, and against a budget you can enforce in CI.
 
 ```
 $ agentdiet --top 4 /home/apps/src/claude-mem
-agentdiet 0.1.0  ·  /home/apps/src/claude-mem
-estimator: prose chars/4 + fenced-code chars/3, rounded up per segment (~±15% vs BPE tokenizers)
+agentdiet 0.1.1  ·  /home/apps/src/claude-mem
+estimator: prose chars/4.5 + fenced-code chars/3.4, rounded up per segment (measured MAE 8% vs cl100k_base)
 
 ALWAYS-ON   paid on every request, before you type
-     497   0.25%    41 L  .claude/CLAUDE.md
+     442   0.22%    41 L  .claude/CLAUDE.md
 
 ON-DEMAND   costs nothing until the agent opens it
-   6,684   3.34%   439 L  plugin/skills/ccs-align/SKILL.md
-   5,337   2.67%   241 L  claude-mem-cursor/skills/agent-cost-report/SKILL.md
-   5,337   2.67%   241 L  claude-mem-grok-bot/skills/agent-cost-report/SKILL.md
-   5,337   2.67%   241 L  cowork/skills/agent-cost-report/SKILL.md
-       —      —  +63.5k  … 39 more files
+   5,929   2.96%   439 L  plugin/skills/ccs-align/SKILL.md
+   4,742   2.37%   241 L  claude-mem-cursor/skills/agent-cost-report/SKILL.md
+   4,742   2.37%   241 L  claude-mem-grok-bot/skills/agent-cost-report/SKILL.md
+   4,742   2.37%   241 L  cowork/skills/agent-cost-report/SKILL.md
+       —      —  +56.4k  … 39 more files
 
 CONFIG   not context; declares what the agent may call
-     375  mcp          plugin/.mcp.json
-      39  settings     .claude/settings.json
+     333  mcp          plugin/.mcp.json
+      35  settings     .claude/settings.json
 
-TOTAL      497 always-on tokens  (0.25% of a 200,000-token window)
-GRADE      A  (budget 1,500)   on-demand surface: 86,200 tokens
-COST       $1.49 per 1,000 sessions at $3.00 per 1M input tokens
+TOTAL      442 always-on tokens  (0.22% of a 200,000-token window)
+GRADE      A  (budget 1,500)   on-demand surface: 76,533 tokens
+COST       $1.33 per 1,000 sessions at $3.00 per 1M input tokens
 
 FINDINGS
-  · 20,388 tokens repeated across claude-mem-cursor/skills/agent-cost-report/SKILL.md ↔ claude-mem-grok-bot/skills/agent-cost-report/SKILL.md and 3 more
+  · 18,140 tokens repeated across claude-mem-cursor/skills/agent-cost-report/SKILL.md ↔ claude-mem-grok-bot/skills/agent-cost-report/SKILL.md and 3 more
     → keep the text in one file and point at it from the others
-  · 1,090 tokens repeated across openclaw/skills/make-plan/SKILL.md ↔ plugin/skills/make-plan/SKILL.md
+  · 972 tokens repeated across openclaw/skills/make-plan/SKILL.md ↔ plugin/skills/make-plan/SKILL.md
+    → keep the text in one file and point at it from the others
+  · 425 tokens repeated across openclaw/skills/do/SKILL.md ↔ plugin/skills/do/SKILL.md
     → keep the text in one file and point at it from the others
   · 1 MCP server declared (mcp-search); tool schemas enter the prompt on connect
     → disable servers you do not use in this repo — schema cost scales with tool count
 
-NOTE       86,200 tokens sit on demand — 173.4x the always-on tax, and free.
+NOTE       76,533 tokens sit on demand — 173.2x the always-on tax, and free.
 ```
 
 Real output, real repository, nothing staged.
@@ -175,15 +177,24 @@ then in your README:
 
 ## How tokens are counted
 
-`agentdiet` does not embed a tokenizer. It estimates prose at 4 characters per
-token and fenced code at 3, rounding each segment up — within roughly ±15% of
-cl100k/o200k on real instruction files.
+`agentdiet` does not embed a tokenizer. It estimates prose at 4.5 characters per
+token and fenced code at 3.4, rounding each segment up.
+
+Those divisors are measured, not guessed: on 137 real agent-configuration files
+from five repositories, against `cl100k_base` via `tiktoken` —
+
+| mean error | median | MAE | p10 / p90 | within ±15% |
+| --- | --- | --- | --- | --- |
+| +1.2% | +0.4% | 8.1% | −10.5% / +16.7% | 87% of files |
+
+The sweep that chose them, and the corpus, are in
+[docs/estimator.md](docs/estimator.md); `scripts/measure_estimator.py` re-runs it.
 
 That is deliberate. A 2 MB vocabulary in the binary would buy precision nobody
 acts on, cost 30 MB of download, and still be wrong for the next model's
-tokenizer. The questions this tool answers are "is this file 400 tokens or
-4,000" and "did it grow by 30% this quarter" — both survive the error bar, and
-the estimator is printed in every report so the number is never a black box.
+tokenizer. The questions this tool answers are "400 tokens or 4,000" and "did it
+grow by 30% this quarter" — both sit far outside an 8% error bar, and the
+estimator is printed in every report so the number is never a black box.
 
 If you need exact counts for a specific model, run the file through that
 tokenizer; `agentdiet` tells you which file is worth the trouble.
@@ -216,6 +227,7 @@ every real repository an A and the grade becomes decoration.
 - [ ] `--since <ref>` — report the always-on delta introduced by a branch
 - [ ] `.agentdietignore` for repos with generated instruction files
 - [ ] exact tokenizer mode behind a build tag
+- [ ] `--explain` to show which blocks a finding matched
 - [ ] SARIF output so findings land in the code-scanning tab
 - [ ] per-model window presets (`--model gpt-5`, `--model claude-4.5`)
 

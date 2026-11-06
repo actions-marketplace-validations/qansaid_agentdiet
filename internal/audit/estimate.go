@@ -4,16 +4,18 @@ import "math"
 
 // Estimator is the human-readable description of how tokens are counted.
 // Published in every report so the number never looks like a black box.
-const Estimator = "prose chars/4 + fenced-code chars/3, rounded up per segment (~±15% vs BPE tokenizers)"
+const Estimator = "prose chars/4.5 + fenced-code chars/3.4, rounded up per segment (measured MAE 8% vs cl100k_base)"
 
 // Estimate returns an approximate token count for a document.
 //
 // It is deliberately tokenizer-independent: agentdiet scans a repository on the
 // user's machine with no network access and no 2 MB vocabulary embedded in the
-// binary. Prose is estimated at 4 characters per token, fenced code at 3, which
-// tracks cl100k/o200k closely enough to answer "is this file 400 tokens or
-// 4,000" — the only question the tool claims to answer. Segments are rounded up
-// separately so a file made of many short paragraphs is not under-counted.
+// binary. Prose is estimated at 4.5 characters per token and fenced code at 3.4,
+// calibrated against cl100k_base on 137 real agent-configuration files: mean
+// error +1.2%, median +0.4%, mean absolute error 8.1%, 87% of files within
+// +/-15% (p10 -10.5%, p90 +16.7%). See docs/estimator.md for the corpus and the
+// sweep that chose these divisors. Segments are rounded up separately so a file
+// made of many short paragraphs is not under-counted.
 func Estimate(content string) int {
 	var proseChars, codeChars int
 	inFence := false
@@ -40,7 +42,7 @@ func Estimate(content string) int {
 		}
 	}
 
-	tokens := int(math.Ceil(float64(proseChars)/4.0)) + int(math.Ceil(float64(codeChars)/3.0))
+	tokens := int(math.Ceil(float64(proseChars)/4.5)) + int(math.Ceil(float64(codeChars)/3.4))
 	return tokens
 }
 

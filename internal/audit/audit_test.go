@@ -198,13 +198,13 @@ func TestMCPDialects(t *testing.T) {
 
 func TestEstimateProseAndCode(t *testing.T) {
 	prose := strings.Repeat("abcd ", 400) // 2000 chars, no fence
-	if got := Estimate(prose); got < 480 || got > 520 {
-		t.Errorf("prose: %d tokens for 2000 chars, want ~500", got)
+	if got := Estimate(prose); got < 420 || got > 470 {
+		t.Errorf("prose: %d tokens for 2000 chars, want ~444", got)
 	}
 
 	code := "```\n" + strings.Repeat("x", 3000) + "\n```\n"
-	if got := Estimate(code); got < 900 || got > 1100 {
-		t.Errorf("code: %d tokens for 3000 fenced chars, want ~1000", got)
+	if got := Estimate(code); got < 860 || got > 940 {
+		t.Errorf("code: %d tokens for 3000 fenced chars, want ~890", got)
 	}
 
 	if got := Estimate(""); got != 0 {
