@@ -34,6 +34,14 @@ jobs:
         run: go test ./... -race -count=1 -covermode=atomic -coverprofile=cover.out
       - name: build
         run: go build -trimpath -ldflags="-s -w" -o agentdiet .
+      - name: version injection
+        # Guard the release ldflags contract: a builder that drops -X main.version
+        # must fail here, not ship a binary claiming the wrong version.
+        run: |
+          go build -trimpath -ldflags="-s -w -X main.version=9.9.9-ci" -o agentdiet-version .
+          got=$(./agentdiet-version --version)
+          echo "binary reports: $got"
+          test "$got" = "agentdiet 9.9.9-ci"
       - name: self-audit
         run: ./agentdiet . --json > /dev/null
 

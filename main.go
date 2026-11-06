@@ -11,7 +11,9 @@ import (
 	"github.com/indraoverflow/agentdiet/internal/audit"
 )
 
-const version = "0.1.1"
+// version is stamped at release time with -X main.version={{.Version}} by
+// goreleaser; a plain `go build` keeps the dev default.
+var version = "dev"
 
 func main() {
 	os.Exit(run(os.Args[1:], os.Stdout, os.Stderr))

@@ -1,6 +1,6 @@
 BINARY := agentdiet
-VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
-LDFLAGS := -s -w
+VERSION := $(or $(shell git describe --tags --always --dirty 2>/dev/null | sed 's/^v//'),dev)
+LDFLAGS := -s -w -X main.version=$(VERSION)
 
 .PHONY: build test vet fmt tidy run demo clean
 

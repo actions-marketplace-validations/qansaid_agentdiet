@@ -15,7 +15,10 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w
+      # Hardcode the released tag into the binary so `agentdiet --version`
+      # reports the version it was published as, not a value baked into the
+      # source tree.
+      - -s -w -X main.version={{ .Version }}
     goos:
       - linux
       - darwin
