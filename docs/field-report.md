@@ -70,8 +70,15 @@ a problem anyone needs a tool for.
 | scope (always-on content that belongs in a subdirectory) | 6 / 80 | not counted |
 
 Duplicated content is **16.0%** of all always-on tokens in the sample
-(49,827 of 312,219). That is the number the tool was built around, and it holds
-up: nearly a quarter of repositories pay twice for the same instructions.
+(49,827 of 312,219), spread across 19 repositories.
+
+Read that as duplication in the repository, not duplication in a session. Two
+always-on files holding the same bytes are both first-request candidates by this
+tool's model, but a runtime normally reads one convention file, so a `CLAUDE.md`
+that copies `AGENTS.md` often costs a session once rather than twice. The double
+charge is certain only where a runtime loads both. What is certain either way is
+drift: two 548-line files that have to be edited in step, and stop agreeing the
+moment an edit lands in one of them.
 
 The oversized single file is the more common failure. Five of the worst:
 
@@ -100,6 +107,10 @@ Being explicit about the limits, because the numbers are easy to over-read:
 - **Nobody has shown that trimming context improves outcomes.** The cost figures
   are arithmetic on token counts, not billing data, and there is no before/after
   quality measurement here.
+- **Duplication is counted per repository, not per session.** The tool counts
+  duplicated always-on content; it cannot see which of those files a given
+  runtime actually loads. Treat the duplicated token count as an upper bound on
+  what a single session pays.
 - **One repository measured zero files.** `GOVINSAGA/gobblecube-eta-challenge`
   was indexed with a root `AGENTS.md` but the clone had none, presumably removed
   or renamed since. It is left in the set rather than quietly dropped.
