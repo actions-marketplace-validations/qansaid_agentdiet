@@ -34,7 +34,7 @@ const detected = [
   {
     tier: "always-on",
     files:
-      "AGENTS.md · CLAUDE.md · GEMINI.md · JULES.md · .goosehints at the root or in .claude/ or .codex/; AGENT.md · README.agent.md at the root; .cursorrules · .windsurfrules · .clinerules · .rules at the root; .github/copilot-instructions.md",
+      "AGENTS.md · CLAUDE.md · GEMINI.md · JULES.md · .goosehints at the root or in .claude/ or .codex/; AGENT.md · README.agent.md at the root; .cursorrules · .windsurfrules · .clinerules · .rules at the root; .github/copilot-instructions.md; SOUL.md · STYLE.md · INSTRUCTIONS.md · MEMORY.md inside a Nakama profile workspace, meaning a directory that also contains SOUL.md",
   },
   {
     tier: "scoped",

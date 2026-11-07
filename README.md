@@ -151,7 +151,7 @@ Recognized without configuration:
 
 | Tier | Matched paths |
 | --- | --- |
-| **always-on** | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `JULES.md`, `.goosehints` at the repo root or in `.claude/` or `.codex/`; `AGENT.md`, `README.agent.md` at the root; `.cursorrules`, `.windsurfrules`, `.clinerules`, `.rules` at the root; `.github/copilot-instructions.md` |
+| **always-on** | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `JULES.md`, `.goosehints` at the repo root or in `.claude/` or `.codex/`; `AGENT.md`, `README.agent.md` at the root; `.cursorrules`, `.windsurfrules`, `.clinerules`, `.rules` at the root; `.github/copilot-instructions.md`; `SOUL.md`, `STYLE.md`, `INSTRUCTIONS.md`, `MEMORY.md` inside a Nakama profile workspace (a directory that also contains `SOUL.md`, since Nakama composes all four into the system prompt) |
 | **scoped** | the same instruction filenames in any subdirectory |
 | **on-demand** | `**/skills/**/SKILL.md`, `.cursor/rules/*.mdc`, `.claude/commands/**`, `.github/prompts/**`, `.github/instructions/**`, `.roo/rules/**`, `.continue/rules/**` |
 | **config** | `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.claude/settings.json`, `.codex/config.toml` (MCP server names are extracted and reported) |

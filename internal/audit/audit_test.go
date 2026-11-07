@@ -292,3 +292,85 @@ func TestJSONRoundTrip(t *testing.T) {
 		}
 	}
 }
+
+func TestNakamaWorkspaceIsAlwaysOn(t *testing.T) {
+	root := t.TempDir()
+
+	// A Nakama profile workspace keeps the agent's prompt in four files at the
+	// workspace root and composes all of them into the system prompt.
+	writeFile(t, root, "SOUL.md", "# Identity\n\nYou are a careful reviewer who reads the diff before commenting.\n")
+	writeFile(t, root, "STYLE.md", "# Style\n\nShort sentences. No preamble.\n")
+	writeFile(t, root, "INSTRUCTIONS.md", "# Instructions\n\nRun the tests before claiming a change works.\n")
+	writeFile(t, root, "MEMORY.md", "# Memory\n\nThe project uses Bun and mise.\n")
+	writeFile(t, root, "skills/review/SKILL.md", "# Review\n\nRead the diff twice.\n")
+
+	rep, err := Discover(root, "test", 200000, 3)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	alwaysOn := map[string]bool{}
+	for _, f := range rep.Files {
+		if f.Tier == TierAlwaysOn {
+			alwaysOn[f.Path] = true
+		}
+	}
+	for _, want := range []string{"SOUL.md", "STYLE.md", "INSTRUCTIONS.md", "MEMORY.md"} {
+		if !alwaysOn[want] {
+			t.Errorf("%s was not counted as always-on", want)
+		}
+	}
+	if len(alwaysOn) != 4 {
+		t.Errorf("always-on files = %d, want 4", len(alwaysOn))
+	}
+	if rep.AlwaysOnTokens == 0 {
+		t.Fatal("always-on tokens = 0: the workspace prompt is being paid for and not reported")
+	}
+	if rep.OnDemandTokens == 0 {
+		t.Error("the skill should stay on-demand, not join the always-on total")
+	}
+	if rep.OnDemandTokens >= rep.AlwaysOnTokens+rep.OnDemandTokens {
+		t.Error("on-demand tokens swallowed the workspace prompt")
+	}
+}
+
+func TestNakamaWorkspaceOutsideRootIsDetected(t *testing.T) {
+	root := t.TempDir()
+	writeFile(t, root, "agents/reviewer/SOUL.md", "# Identity\n\nYou review pull requests.\n")
+	writeFile(t, root, "agents/reviewer/MEMORY.md", "# Memory\n\nReviews use the team checklist.\n")
+
+	rep, err := Discover(root, "test", 200000, 3)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(rep.Files) != 2 {
+		t.Fatalf("files = %d, want 2", len(rep.Files))
+	}
+	for _, f := range rep.Files {
+		if f.Tier != TierAlwaysOn {
+			t.Errorf("%s tier = %q, want always-on", f.Path, f.Tier)
+		}
+	}
+}
+
+func TestSoulFileNamesWithoutAWorkspaceAreIgnored(t *testing.T) {
+	root := t.TempDir()
+
+	// The same filenames outside a Nakama workspace carry no guarantee of being
+	// loaded into a prompt, and INSTRUCTIONS.md is common enough that guessing
+	// would inflate every report.
+	writeFile(t, root, "docs/STYLE.md", "# Style guide\n\nHow we write documentation.\n")
+	writeFile(t, root, "docs/INSTRUCTIONS.md", "# Build instructions\n\nRun make docs.\n")
+	writeFile(t, root, "MEMORY.md", "# Notes\n\nScratch notes, not a prompt.\n")
+
+	rep, err := Discover(root, "test", 200000, 3)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(rep.Files) != 0 {
+		t.Fatalf("files = %d, want 0: %+v", len(rep.Files), rep.Files)
+	}
+	if rep.AlwaysOnTokens != 0 {
+		t.Fatalf("always-on tokens = %d, want 0", rep.AlwaysOnTokens)
+	}
+}

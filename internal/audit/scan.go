@@ -89,9 +89,30 @@ var skipDirs = map[string]bool{
 
 const maxFileBytes = 2 << 20 // 2 MiB guard against minified blobs
 
+// soulFiles are the four prompt files a Nakama profile workspace keeps at its
+// root. composeSoulSystemPrompt() concatenates every one that exists into the
+// system prompt, so in that layout all of them are paid for on every request.
+var soulFiles = map[string]bool{
+	"SOUL.md":         true,
+	"STYLE.md":        true,
+	"INSTRUCTIONS.md": true,
+	"MEMORY.md":       true,
+}
+
+// isSoulWorkspace reports whether dir looks like a Nakama profile workspace.
+// SOUL.md is the marker: the name is distinctive enough that a stray match is
+// unlikely, and a workspace that has not written STYLE or MEMORY yet should
+// still be measured rather than silently ignored.
+func isSoulWorkspace(dir string, dirs map[string]map[string]bool) bool {
+	return dirs[dir]["SOUL.md"]
+}
+
 // classify maps a slash-separated relative path to (kind, tier).
 // ok is false when the path is not agent context.
-func classify(rel string) (kind string, tier Tier, ok bool) {
+//
+// dirs carries the filenames of each directory, because two conventions are
+// only recognisable as a set: a Nakama workspace is a directory, not a filename.
+func classify(rel string, dirs map[string]map[string]bool) (kind string, tier Tier, ok bool) {
 	base := path.Base(rel)
 	dir := path.Dir(rel)
 
@@ -144,6 +165,14 @@ func classify(rel string) (kind string, tier Tier, ok bool) {
 			return "instructions", TierOnDemand, true
 		}
 	}
+
+	// Nakama profile workspace: SOUL.md, STYLE.md, INSTRUCTIONS.md and MEMORY.md
+	// sit together, and every one that exists is injected into the system prompt.
+	// Without the directory check the always-on total for such a workspace reads
+	// zero while the agent is paying for all four on every request.
+	if soulFiles[base] && isSoulWorkspace(dir, dirs) {
+		return "instructions", TierAlwaysOn, true
+	}
 	return "", "", false
 }
 
@@ -164,6 +193,16 @@ func Discover(root, version string, window int, price float64) (*Report, error) 
 	servers := []string{}
 	serverSeen := map[string]bool{}
 
+	// The walk collects candidates before classifying any of them, because a
+	// convention can be a directory rather than a filename, and WalkDir yields
+	// siblings in alphabetical order: MEMORY.md arrives before SOUL.md.
+	type candidate struct {
+		rel  string
+		size int64
+	}
+	var candidates []candidate
+	dirNames := map[string]map[string]bool{}
+
 	err = filepath.WalkDir(abs, func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil // unreadable subtree: skip, do not abort the audit
@@ -180,22 +219,37 @@ func Discover(root, version string, window int, price float64) (*Report, error) 
 		}
 		rel = filepath.ToSlash(rel)
 
-		kind, tier, ok := classify(rel)
-		if !ok {
-			return nil
-		}
 		info, statErr := d.Info()
-		if statErr != nil || info.Size() > maxFileBytes {
+		if statErr != nil {
 			return nil
 		}
+		candidates = append(candidates, candidate{rel: rel, size: info.Size()})
+
+		dir := path.Dir(rel)
+		if dirNames[dir] == nil {
+			dirNames[dir] = map[string]bool{}
+		}
+		dirNames[dir][path.Base(rel)] = true
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, c := range candidates {
+		kind, tier, ok := classify(c.rel, dirNames)
+		if !ok || c.size > maxFileBytes {
+			continue
+		}
+		p := filepath.Join(abs, filepath.FromSlash(c.rel))
 		data, readErr := os.ReadFile(p)
 		if readErr != nil {
-			return nil
+			continue
 		}
 		content := string(data)
 
 		files = append(files, File{
-			Path:    rel,
+			Path:    c.rel,
 			Kind:    kind,
 			Tier:    tier,
 			Bytes:   len(data),
@@ -212,10 +266,6 @@ func Discover(root, version string, window int, price float64) (*Report, error) 
 				}
 			}
 		}
-		return nil
-	})
-	if err != nil {
-		return nil, err
 	}
 
 	sort.Slice(files, func(i, j int) bool {
