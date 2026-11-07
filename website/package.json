@@ -2,7 +2,7 @@
   "name": "agentdiet-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Product website for AgentDiet — measure and cut the always-on context tax of AI coding agents.",
+  "description": "Product website for AgentDiet \u2014 measure and cut the always-on context tax of AI coding agents.",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
@@ -28,5 +28,10 @@
     "eslint-config-next": "16.4.5",
     "tailwindcss": "4.3.5",
     "typescript": "5.9.3"
+  },
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.5"
+    }
   }
 }
