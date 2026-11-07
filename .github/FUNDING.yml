@@ -1,0 +1,8 @@
+# Renders the Sponsor button in the repository header and the "Sponsor this
+# project" card in the sidebar.
+#
+# https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+github: indraoverflow
+
+# More destinations can be listed here later. Each one becomes its own button:
+# custom: ["https://agentdiet.qansa.web.id"]
