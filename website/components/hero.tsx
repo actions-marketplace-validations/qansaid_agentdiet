@@ -11,7 +11,7 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 /**
  * The hero artifact: a "context bill" for the simulated repository, built from
  * the same numbers the CLI printed. The grade rail is the argument the tool
- * makes — absolute always-on tokens, not a percentage of the window.
+ * makes: absolute always-on tokens, not a percentage of the window.
  */
 function ContextBill() {
   const b = demo.before;

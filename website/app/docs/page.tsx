@@ -48,7 +48,7 @@ const detected = [
   {
     tier: "config",
     files:
-      ".mcp.json · .cursor/mcp.json · .vscode/mcp.json · .claude/settings.json · .codex/config.toml — MCP server names are extracted and reported.",
+      ".mcp.json · .cursor/mcp.json · .vscode/mcp.json · .claude/settings.json · .codex/config.toml; MCP server names are extracted and reported.",
   },
 ];
 
@@ -60,7 +60,7 @@ const findingKinds = [
   },
   {
     kind: "near-duplicate",
-    what: "One instruction file at least 60% contained in another — a copy that was edited once and never again.",
+    what: "One instruction file at least 60% contained in another, a copy that was edited once and never again.",
     fix: "Keep one canonical file; the other should be a pointer, not a copy.",
   },
   {
@@ -71,7 +71,7 @@ const findingKinds = [
   {
     kind: "scope",
     what: "MCP servers declared in the repository. Their tool schemas enter the prompt as soon as a session connects.",
-    fix: "Disable servers you do not use in this repo — schema cost scales with tool count.",
+    fix: "Disable servers you do not use in this repo: schema cost scales with tool count.",
   },
 ];
 
@@ -115,7 +115,7 @@ export default function DocsPage() {
             </h1>
             <p className="mt-4 max-w-[62ch] text-[14.5px] leading-[1.65] text-muted">
               Everything below describes the shipped binary. The tool has six
-              flags, three exit codes and no configuration file — the whole surface
+              flags, three exit codes and no configuration file: the whole surface
               fits on this page.
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -161,7 +161,7 @@ agentdiet path/to/repo
               Exit code <code>0</code> means the audit completed within budget,{" "}
               <code>1</code> means always-on tokens exceeded{" "}
               <code>--max-tokens</code>, and <code>2</code> means the audit could
-              not run — usually a path that does not exist or is not a directory.
+              not run, usually a path that does not exist or is not a directory.
             </p>
 
             <h2 id="cli">CLI reference</h2>
@@ -220,7 +220,7 @@ agentdiet path/to/repo
               Detection is by filename and position, with no configuration.{" "}
               <code>node_modules</code>, <code>vendor</code>, <code>dist</code>,{" "}
               <code>build</code>, <code>target</code>, virtualenvs, <code>.git</code>{" "}
-              and other dependency or build trees are skipped — a vendored{" "}
+              and other dependency or build trees are skipped, so a vendored{" "}
               <code>AGENTS.md</code> is not your prompt.
             </p>
             <div className="my-5 overflow-hidden rounded-lg border border-line">
@@ -250,7 +250,7 @@ agentdiet path/to/repo
               The <code>cost</code> line multiplies always-on tokens by{" "}
               <code>--price</code> (default <code>3.00</code> USD per 1M input
               tokens). It is a model of the context, not a claim about your
-              invoice — change the flag to match your provider&apos;s rate.
+              invoice. Change the flag to match your provider&apos;s rate.
             </p>
             <p>
               <code>--json</code> emits the same data with stable keys:{" "}
@@ -350,7 +350,7 @@ jobs:
               <code>agentdiet --max-tokens 4000</code> as a step: exit code 1 fails
               the job. To publish the number as a badge, write{" "}
               <code>agentdiet --badge</code> to a gist and point a shields.io
-              endpoint badge at the raw URL — the workflow for that is in the
+              endpoint badge at the raw URL. The workflow for that is in the
               repository README.
             </p>
 
@@ -359,7 +359,7 @@ jobs:
             <p>
               Detection is a fixed table in{" "}
               <code>internal/audit/scan.go</code>. Open an issue with the filename
-              and where it sits in the tree — do not paste a private
+              and where it sits in the tree. Do not paste a private
               repository&apos;s contents. There is a dedicated issue template for
               exactly this.
             </p>

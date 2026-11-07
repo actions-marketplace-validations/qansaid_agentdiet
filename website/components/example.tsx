@@ -88,7 +88,7 @@ function DeltaBand() {
           every single request
         </p>
         <p className="font-mono text-[10.5px] text-faint">
-          none of the information was deleted — it moved tiers
+          none of the information was deleted, it moved tiers
         </p>
       </div>
     </div>
@@ -227,13 +227,13 @@ export function Example() {
               <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
                 This repository is{" "}
                 <span className="text-fg">synthetic</span>. The before and after
-                figures describe that fixture only — they are not a benchmark, not
+                figures describe that fixture only. They are not a benchmark, not
                 a survey, and not a promised saving for your codebase.
               </p>
               <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
                 The percentage is a consequence of how much duplication the fixture
                 contains. Your repository may have almost none, in which case the
-                report will tell you that too — and the honest next step is to run
+                report will tell you that too, and the honest next step is to run
                 it on your own tree, which takes one command and sends nothing
                 anywhere.
               </p>

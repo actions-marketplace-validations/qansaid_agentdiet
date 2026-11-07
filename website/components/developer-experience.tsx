@@ -74,7 +74,7 @@ export function DeveloperExperience() {
       body: (
         <div>
           <div style={{ color: "#5b5b64" }}>
-            {"# no output on success — the binary lands in $(go env GOPATH)/bin"}
+            {"# no output on success; the binary lands in $(go env GOPATH)/bin"}
           </div>
           <div style={{ color: "#c9c9cf" }}>{"$ which agentdiet"}</div>
           <div style={{ color: "#e4e4e7" }}>{"~/go/bin/agentdiet"}</div>
@@ -190,7 +190,7 @@ export function DeveloperExperience() {
               className="animate-[rise_0.35s_cubic-bezier(0.22,1,0.36,1)]"
             >
               <Terminal
-                title={<span className="text-zinc-400">bash — {activeCmd.command}</span>}
+                title={<span className="text-zinc-400">bash: {activeCmd.command}</span>}
                 copyValue={activeCmd.command}
                 copyLabel={`${activeCmd.label} command`}
               >

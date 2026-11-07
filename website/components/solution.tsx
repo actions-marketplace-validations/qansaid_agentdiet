@@ -26,7 +26,7 @@ export function Solution() {
           index="02"
           kicker="The solution"
           title="One binary that prices your prompt"
-          lede="AgentDiet walks the repository, keeps the four tiers apart, and turns the always-on number into something you can argue about, budget for, and gate in CI. It reads files and prints a report — nothing else."
+          lede="AgentDiet walks the repository, keeps the four tiers apart, and turns the always-on number into something you can argue about, budget for, and gate in CI. It reads files and prints a report and nothing else."
           aside={
             <a
               href={links.repo}
@@ -80,7 +80,7 @@ export function Solution() {
           </div>
           <p className="mt-3 text-[12px] text-faint">
             Unshipped work is listed as unchecked in the repository&rsquo;s
-            roadmap — <span className="font-mono">--since</span>,{" "}
+            roadmap: <span className="font-mono">--since</span>,{" "}
             <span className="font-mono">.agentdietignore</span>, exact tokenizer
             mode and SARIF are planned, not features.
           </p>

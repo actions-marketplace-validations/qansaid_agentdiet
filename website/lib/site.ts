@@ -4,14 +4,14 @@
  * Every command, flag, threshold and number below was read out of
  * github.com/qansaid/agentdiet (main, 2a55492) or produced by running the
  * compiled binary against the fixture described in lib/demo.ts. If the CLI
- * changes, this file changes with it — nothing here is aspirational.
+ * changes, this file changes with it. Nothing here is aspirational.
  */
 
 export const site = {
   name: "AgentDiet",
   tagline: "Less Context Waste. More Room for Engineering.",
   description:
-    "AgentDiet measures, analyzes and helps you cut the context your AI coding agent loads on every request — the always-on token tax in AGENTS.md, CLAUDE.md, .cursorrules and MCP configs. One static Go binary, MIT licensed, enforceable in CI.",
+    "AgentDiet measures, analyzes and helps you cut the context your AI coding agent loads on every request: the always-on token tax in AGENTS.md, CLAUDE.md, .cursorrules and MCP configs. One static Go binary, MIT licensed, enforceable in CI.",
   // Override with NEXT_PUBLIC_SITE_URL when deploying to a different domain.
   // `||` catches an empty string too: a build arg that is set but blank must
   // not produce an invalid metadataBase.
@@ -50,7 +50,7 @@ export const flags = [
   { flag: "--window", default: "200000", meaning: "Context window used for the share column." },
   { flag: "--price", default: "3.00", meaning: "USD per 1M input tokens, used for the cost line." },
   { flag: "--top", default: "8", meaning: "Maximum files listed per section." },
-  { flag: "--version", default: "—", meaning: "Print the version and exit." },
+  { flag: "--version", default: "n/a", meaning: "Print the version and exit." },
 ] as const;
 
 export const exitCodes = [
@@ -69,7 +69,7 @@ export const tiers = [
   {
     name: "scoped",
     when: "While editing that subtree",
-    advice: "Fine — proportional to the work.",
+    advice: "Fine, proportional to the work.",
     weight: "cheap",
   },
   {
@@ -114,7 +114,7 @@ export const capabilities = [
   },
   {
     title: "MCP tool surface analysis",
-    body: "Extracts declared server names from the three config dialects in the wild — .mcp.json, .cursor/mcp.json and .vscode/mcp.json — because tool schemas enter the prompt the moment a session connects.",
+    body: "Extracts declared server names from the three config dialects in the wild (.mcp.json, .cursor/mcp.json and .vscode/mcp.json), because tool schemas enter the prompt the moment a session connects.",
     evidence: "mcpServerNames()",
   },
   {
@@ -134,7 +134,7 @@ export const steps = [
     id: "scan",
     label: "Scan",
     title: "Discover what the agent loads",
-    body: "The walker finds instruction files by convention — no config file, no manifest to maintain. Each hit is sorted into always-on, scoped, on-demand or config, because only one of those four tiers is a bill.",
+    body: "The walker finds instruction files by convention: no config file, no manifest to maintain. Each hit is sorted into always-on, scoped, on-demand or config, because only one of those four tiers is a bill.",
     caption: "No configuration. Convention beats a manifest you forget to update.",
   },
   {
@@ -142,7 +142,7 @@ export const steps = [
     label: "Analyze",
     title: "Price the overhead",
     body: "Tokens per file, share of the context window, cost per 1,000 sessions, and an A–F grade on absolute always-on tokens. Then the findings: verbatim duplicates, near-duplicates, oversize files, declared MCP surface.",
-    caption: "Absolute thresholds, not percentages of the window — a percentage makes every real repository an A.",
+    caption: "Absolute thresholds, not percentages of the window: a percentage makes every real repository an A.",
   },
   {
     id: "optimize",
@@ -163,11 +163,11 @@ export const steps = [
 export const faq = [
   {
     q: "What is AgentDiet?",
-    a: "A single static Go binary that walks a repository, finds every file an AI coding agent injects into the prompt, and reports what that costs — per request, per 1,000 sessions, and against a budget you can enforce in CI. It is one binary with no runtime dependencies, no config file and no network call.",
+    a: "A single static Go binary that walks a repository, finds every file an AI coding agent injects into the prompt, and reports what that costs: per request, per 1,000 sessions, and against a budget you can enforce in CI. It is one binary with no runtime dependencies, no config file and no network call.",
   },
   {
     q: "Why should I care about context consumption?",
-    a: "Instruction files are loaded on every request, before you have typed anything. They grow by accretion — a rule per incident, a table per architecture decision — until the agent spends thousands of tokens of attention on stale instructions and reference material that was never meant to be read every time. Unlike skills, which cost nothing until opened, that context is paid for on every single request.",
+    a: "Instruction files are loaded on every request, before you have typed anything. They grow by accretion, a rule per incident and a table per architecture decision, until the agent spends thousands of tokens of attention on stale instructions and reference material that was never meant to be read every time. Unlike skills, which cost nothing until opened, that context is paid for on every single request.",
   },
   {
     q: "Does AgentDiet require an API key?",
@@ -187,7 +187,7 @@ export const faq = [
   },
   {
     q: "Can I integrate it into CI/CD?",
-    a: "Yes. There is a composite GitHub Action (qansaid/agentdiet@v1) that installs the binary, runs the audit and fails the job when always-on tokens exceed max-tokens. Without the action, install the binary with go install and run agentdiet --max-tokens 4000 as a step — exit code 1 is the gate.",
+    a: "Yes. There is a composite GitHub Action (qansaid/agentdiet@v1) that installs the binary, runs the audit and fails the job when always-on tokens exceed max-tokens. Without the action, install the binary with go install and run agentdiet --max-tokens 4000 as a step; exit code 1 is the gate.",
   },
   {
     q: "How accurate is the token count?",

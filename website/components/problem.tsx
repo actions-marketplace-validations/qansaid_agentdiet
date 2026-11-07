@@ -6,7 +6,7 @@ const patterns = [
   {
     n: "01",
     title: "Bloated AGENTS.md",
-    body: "A rule per incident, a table per architecture decision. Nothing is ever deleted, because removing a rule feels riskier than adding one — so the file only grows.",
+    body: "A rule per incident, a table per architecture decision. Nothing is ever deleted, because removing a rule feels riskier than adding one, so the file only grows.",
     sample: "AGENTS.md · 285 lines · 3,086 tokens",
   },
   {
@@ -46,7 +46,7 @@ const tierRows = [
   {
     name: "scoped",
     when: "Loaded only while editing that subtree",
-    advice: "Fine — proportional to the work.",
+    advice: "Fine, proportional to the work.",
     tokens: demo.before.scoped,
     bill: false,
   },
@@ -245,7 +245,7 @@ export function Problem() {
                 <span className="font-mono text-[11.5px] text-fg">
                   $3.00 per 1M input tokens
                 </span>{" "}
-                as a default assumption — change it with{" "}
+                as a default assumption. Change it with{" "}
                 <code className="rounded border border-line bg-surface px-1 py-0.5 font-mono text-[11px] text-fg">
                   --price
                 </code>

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "AgentDiet — measure the context your AI coding agent loads before you type";
+  "AgentDiet: measure the context your AI coding agent loads before you type";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -80,7 +80,7 @@ export default async function OpengraphImage() {
             }}
           >
             Measure the always-on token tax in AGENTS.md, CLAUDE.md and
-            .cursorrules — then cap it in CI.
+            .cursorrules, then cap it in CI.
           </div>
         </div>
 

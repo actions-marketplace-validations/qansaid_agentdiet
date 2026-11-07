@@ -20,7 +20,7 @@ export function FinalCta() {
             </h2>
             <p className="mt-4 max-w-[52ch] text-[14.5px] leading-[1.65] text-muted">
               One command, no account, no upload. If your context is already lean
-              the report will say so in one line — which is the cheapest possible
+              the report will say so in one line, which is the cheapest possible
               answer to a question most teams never ask.
             </p>
           </div>

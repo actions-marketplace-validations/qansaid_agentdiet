@@ -1,5 +1,5 @@
 /**
- * Measured demo data — generated from real runs, do not hand-edit.
+ * Measured demo data, generated from real runs. Do not hand-edit.
  *
  * Fixture: a simulated "acme-platform" Go monorepo (AGENTS.md, a CLAUDE.md copy,
  * .cursorrules, copilot-instructions, subdirectory AGENTS.md files, two skills

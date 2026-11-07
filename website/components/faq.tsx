@@ -15,7 +15,7 @@ export function Faq() {
         <div className="mt-12 grid gap-x-12 lg:grid-cols-[minmax(0,0.4fr)_minmax(0,1fr)]">
           <div className="mb-6 lg:mb-0">
             <p className="max-w-[30ch] text-[12.5px] leading-[1.65] text-muted">
-              Something missing? Open a discussion — the question that is asked
+              Something missing? Open a discussion. The question that is asked
               twice becomes a section here.
             </p>
             <a

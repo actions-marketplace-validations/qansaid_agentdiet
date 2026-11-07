@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { site, links } from "@/lib/site";
 
-const title = "AgentDiet — your AI agent deserves a leaner context";
+const title = "AgentDiet: your AI agent deserves a leaner context";
 const description = site.description;
 
 export const metadata: Metadata = {
@@ -79,7 +79,7 @@ const structuredData = {
   applicationSubCategory: "AI coding agent tooling",
   operatingSystem: "Linux, macOS, Windows",
   description:
-    "A static Go binary that measures the context an AI coding agent loads on every request — always-on instruction files, duplicated rules, oversize files and declared MCP tool surface — and enforces a token budget in CI.",
+    "A static Go binary that measures the context an AI coding agent loads on every request: always-on instruction files, duplicated rules, oversize files and declared MCP tool surface, and enforces a token budget in CI.",
   url: site.url,
   downloadUrl: links.releases,
   codeRepository: links.repo,

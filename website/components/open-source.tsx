@@ -27,7 +27,7 @@ const cells = [
   {
     label: "Contributing",
     value: "Welcome",
-    body: "New conventions and new findings are the most useful contributions — each ships with a fixture.",
+    body: "New conventions and new findings are the most useful contributions, each with a test fixture.",
     href: links.contributing,
   },
 ];

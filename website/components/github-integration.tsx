@@ -56,7 +56,7 @@ const points = [
   {
     icon: GitPullRequest,
     title: "Pull request validation",
-    body: "The check runs on every PR. A change that inflates the always-on tax fails like any other broken invariant — the reviewer sees it before the merge, not a quarter later.",
+    body: "The check runs on every PR. A change that inflates the always-on tax fails like any other broken invariant, so the reviewer sees it before the merge, not a quarter later.",
   },
   {
     icon: Workflow,
