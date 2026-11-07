@@ -107,6 +107,12 @@ keeps them apart, because only one of them is a bill:
 | **on-demand** | only when the agent opens it | let it grow; this is where reference material belongs |
 | **config** | declares tools/servers, not text | audit the surface, not the word count |
 
+Measured rather than asserted: over 80 public repositories that keep an
+`AGENTS.md` or `CLAUDE.md` at the root, **16.0%** of all always-on tokens were
+duplicated instructions, and the p90 repository spent 8,446 tokens before the
+prompt even started. Method, distribution and the parts that cut against the
+story are in [docs/field-report.md](docs/field-report.md).
+
 ## Install
 
 ```bash
