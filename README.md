@@ -1,17 +1,41 @@
 # agentdiet
 
-**See what your AI coding agent reads before you type a single word — and cut it.**
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/banner-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/banner-light.svg">
+    <img src="docs/assets/banner-dark.svg" width="100%"
+         alt="agentdiet: always-on agent context in a simulated repository drops from 6,770 tokens at grade C to 711 tokens at grade A, an 89.5 percent reduction.">
+  </picture>
+</p>
 
-[![ci](https://github.com/qansaid/agentdiet/actions/workflows/ci.yml/badge.svg)](https://github.com/qansaid/agentdiet/actions/workflows/ci.yml)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![go](https://img.shields.io/badge/go-1.22%2B-00ADD8.svg)](go.mod)
-[![binary](https://img.shields.io/badge/single%20binary-no%20deps-brightgreen.svg)](#install)
+<p align="center">
+  <a href="https://github.com/qansaid/agentdiet/releases/latest"><img src="https://img.shields.io/github/v/release/qansaid/agentdiet?style=flat-square&label=release&color=3ddc97" alt="Latest release"></a>
+  <a href="https://github.com/qansaid/agentdiet/actions/workflows/ci.yml"><img src="https://github.com/qansaid/agentdiet/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
+  <a href="go.mod"><img src="https://img.shields.io/badge/go-1.22%2B-00ADD8.svg" alt="Go 1.22 or newer"></a>
+  <a href="https://agentdiet.qansa.web.id"><img src="https://img.shields.io/badge/site-agentdiet.qansa.web.id-3ddc97" alt="Website"></a>
+</p>
+
+**See what your AI coding agent reads before you type a single word, and cut it.**
 
 `agentdiet` is a single static binary that walks a repository, finds every file
-your agent runtime injects into the prompt, and tells you what that costs — per
+your agent runtime injects into the prompt, and tells you what that costs: per
 request, per 1,000 sessions, and against a budget you can enforce in CI.
 
+```bash
+go install github.com/qansaid/agentdiet@latest
+agentdiet
 ```
+
+No runtime, no config file, no network call, no account.
+
+<details open>
+<summary><b>Real output</b> from a real repository, nothing staged</summary>
+
+<br>
+
+```text
 $ agentdiet --top 4 /home/apps/src/claude-mem
 agentdiet 0.1.1  ·  /home/apps/src/claude-mem
 estimator: prose chars/4.5 + fenced-code chars/3.4, rounded up per segment (measured MAE 8% vs cl100k_base)
@@ -47,13 +71,27 @@ FINDINGS
 NOTE       76,533 tokens sit on demand — 173.2x the always-on tax, and free.
 ```
 
-Real output, real repository, nothing staged.
+</details>
+
+## How it works
+
+```mermaid
+flowchart LR
+    S["scan<br/>walk the tree, classify every<br/>instruction file by tier"]
+    A["analyze<br/>tokens, cost per 1k sessions,<br/>grade, findings"]
+    O["optimize<br/>move reference material out of<br/>always-on into skills and docs"]
+    E["enforce<br/>exit 1 in CI when the budget<br/>is exceeded"]
+    S --> A --> O --> E
+```
+
+One pass, no server round trip. The first two steps are a command; the last two
+are decisions you make with its output.
 
 ## The problem it measures
 
 Every agent runtime has a folder of files it loads **unconditionally**: `AGENTS.md`,
 `CLAUDE.md`, `.cursorrules`, `copilot-instructions.md`. Nobody measures them. They
-grow by accretion — a rule per incident, a table per architecture decision — and
+grow by accretion, a rule per incident and a table per architecture decision, and
 then one day the agent is spending 12k tokens of attention on stale instructions
 before it has read the question.
 
@@ -78,8 +116,6 @@ go install github.com/qansaid/agentdiet@latest
 
 Prebuilt binaries for Linux, macOS and Windows (amd64/arm64) are on the
 [releases page](https://github.com/qansaid/agentdiet/releases).
-
-No runtime, no config file, no network call, no account.
 
 ## Usage
 
@@ -108,29 +144,39 @@ Exit codes: `0` ok · `1` over budget · `2` audit could not run.
 
 Recognized without configuration:
 
-- **always-on** — `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `JULES.md`, `.goosehints`, `AGENT.md` at the repo root or in `.claude/`/`.codex/`; `.cursorrules`, `.windsurfrules`, `.clinerules`, `.rules`; `.github/copilot-instructions.md`
-- **scoped** — the same instruction filenames in any subdirectory
-- **on-demand** — `**/skills/**/SKILL.md`, `.cursor/rules/*.mdc`, `.claude/commands/**`, `.github/prompts/**`, `.github/instructions/**`, `.roo/rules/**`, `.continue/rules/**`
-- **config** — `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.claude/settings.json`, `.codex/config.toml` (MCP server names are extracted and reported)
+<details>
+<summary><b>File conventions</b> by tier</summary>
+
+<br>
+
+| Tier | Matched paths |
+| --- | --- |
+| **always-on** | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `JULES.md`, `.goosehints` at the repo root or in `.claude/` or `.codex/`; `AGENT.md`, `README.agent.md` at the root; `.cursorrules`, `.windsurfrules`, `.clinerules`, `.rules` at the root; `.github/copilot-instructions.md` |
+| **scoped** | the same instruction filenames in any subdirectory |
+| **on-demand** | `**/skills/**/SKILL.md`, `.cursor/rules/*.mdc`, `.claude/commands/**`, `.github/prompts/**`, `.github/instructions/**`, `.roo/rules/**`, `.continue/rules/**` |
+| **config** | `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.claude/settings.json`, `.codex/config.toml` (MCP server names are extracted and reported) |
+
+</details>
 
 `node_modules`, `vendor`, `dist`, `build`, `target`, virtualenvs, `.git` and other
-dependency or build trees are skipped — a vendored `AGENTS.md` is not your prompt.
+dependency or build trees are skipped, so a vendored `AGENTS.md` is never counted
+as your prompt.
 
 ### Findings
 
 Beyond the totals, four checks produce the advice:
 
-1. **Verbatim duplication** — the same paragraph in two or more files, with the
+1. **Verbatim duplication**: the same paragraph in two or more files, with the
    tokens you would recover by keeping it once. This is the classic
    `CLAUDE.md`-is-a-stale-copy-of-`AGENTS.md` drift.
-2. **Near-duplicate files** — one instruction file ≥60% contained in another.
-3. **Oversize files** — a single always-on file above 3,000 tokens.
-4. **Tool surface** — MCP servers declared in the repo, whose tool schemas enter
+2. **Near-duplicate files**: one instruction file at least 60% contained in another.
+3. **Oversize files**: a single always-on file above 3,000 tokens.
+4. **Tool surface**: MCP servers declared in the repo, whose tool schemas enter
    the prompt as soon as a session connects.
 
 ## Enforce it in CI
 
-Repo-level action — fails the job when the always-on tax grows past a budget, so
+Repo-level action, failing the job when the always-on tax grows past a budget, so
 it can only shrink on purpose:
 
 ```yaml
@@ -180,8 +226,8 @@ then in your README:
 `agentdiet` does not embed a tokenizer. It estimates prose at 4.5 characters per
 token and fenced code at 3.4, rounding each segment up.
 
-Those divisors are measured, not guessed: on 137 real agent-configuration files
-from five repositories, against `cl100k_base` via `tiktoken` —
+Those divisors are measured, not guessed. On 137 real agent-configuration files
+from five repositories, against `cl100k_base` via `tiktoken`:
 
 | mean error | median | MAE | p10 / p90 | within ±15% |
 | --- | --- | --- | --- | --- |
@@ -193,15 +239,15 @@ The sweep that chose them, and the corpus, are in
 That is deliberate. A 2 MB vocabulary in the binary would buy precision nobody
 acts on, cost 30 MB of download, and still be wrong for the next model's
 tokenizer. The questions this tool answers are "400 tokens or 4,000" and "did it
-grow by 30% this quarter" — both sit far outside an 8% error bar, and the
-estimator is printed in every report so the number is never a black box.
+grow by 30% this quarter", both of which sit far outside an 8% error bar. The
+estimator is printed in every report, so the number is never a black box.
 
 If you need exact counts for a specific model, run the file through that
-tokenizer; `agentdiet` tells you which file is worth the trouble.
+tokenizer. `agentdiet` tells you which file is worth the trouble.
 
 ## Grades
 
-Absolute always-on tokens, not a percentage of the window — a percentage makes
+Absolute always-on tokens, not a percentage of the window: a percentage makes
 every real repository an A and the grade becomes decoration.
 
 | Grade | Always-on tokens | Reading |
@@ -224,12 +270,19 @@ every real repository an A and the grade becomes decoration.
 
 ## Roadmap
 
-- [ ] `--since <ref>` — report the always-on delta introduced by a branch
+<details>
+<summary>Planned, not shipped</summary>
+
+<br>
+
+- [ ] `--since <ref>`: report the always-on delta introduced by a branch
 - [ ] `.agentdietignore` for repos with generated instruction files
 - [ ] exact tokenizer mode behind a build tag
 - [ ] `--explain` to show which blocks a finding matched
 - [ ] SARIF output so findings land in the code-scanning tab
 - [ ] per-model window presets (`--model gpt-5`, `--model claude-4.5`)
+
+</details>
 
 ## Contributing
 
@@ -238,4 +291,4 @@ the two most useful contributions; both come with a test fixture.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
