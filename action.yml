@@ -42,7 +42,7 @@ runs:
 
     - name: install agentdiet
       shell: bash
-      run: go install "github.com/indraoverflow/agentdiet@${{ inputs.version }}"
+      run: go install "github.com/qansaid/agentdiet@${{ inputs.version }}"
 
     - name: audit
       id: audit

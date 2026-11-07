@@ -98,7 +98,7 @@ func (r *Report) RenderTextTop(w io.Writer, top int) {
 			commas(r.OnDemandTokens), float64(r.OnDemandTokens)/float64(r.AlwaysOnTokens))
 	}
 
-	fmt.Fprintln(w, "\n--json for machines  ·  --badge for shields.io  ·  github.com/indraoverflow/agentdiet")
+	fmt.Fprintln(w, "\n--json for machines  ·  --badge for shields.io  ·  github.com/qansaid/agentdiet")
 }
 
 // section renders one tier and reports whether it had anything to show.

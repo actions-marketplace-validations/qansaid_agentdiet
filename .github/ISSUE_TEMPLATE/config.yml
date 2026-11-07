@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
   - name: How tokens are counted
-    url: https://github.com/indraoverflow/agentdiet#how-tokens-are-counted
+    url: https://github.com/qansaid/agentdiet#how-tokens-are-counted
     about: The estimator is approximate on purpose — read this before filing an accuracy bug.
   - name: Design notes and grades
-    url: https://github.com/indraoverflow/agentdiet#grades
+    url: https://github.com/qansaid/agentdiet#grades
     about: The grade budgets are stated numbers, not percentages of the window.

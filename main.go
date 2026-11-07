@@ -10,12 +10,12 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"github.com/indraoverflow/agentdiet/internal/audit"
+	"github.com/qansaid/agentdiet/internal/audit"
 )
 
 // version is stamped at release time with -X main.version={{.Version}} by
 // goreleaser. Builds that cannot pass ldflags — `go install
-// github.com/indraoverflow/agentdiet@v0.1.4`, which is how action.yml installs
+// github.com/qansaid/agentdiet@v0.1.4`, which is how action.yml installs
 // the tool — fall back to the module version recorded in the build info, so
 // they still report the tag they came from instead of "dev".
 var version = "dev"

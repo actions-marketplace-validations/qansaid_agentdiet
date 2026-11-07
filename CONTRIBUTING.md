@@ -6,7 +6,7 @@ binary, no runtime dependencies, no network calls. Please keep it that way.
 ## Quick start
 
 ```bash
-git clone https://github.com/indraoverflow/agentdiet
+git clone https://github.com/qansaid/agentdiet
 cd agentdiet
 make test     # go test ./... -race
 make run      # audit this repository
@@ -65,7 +65,7 @@ users to pin, so it must always name the newest released commit — it is moved 
 CI and never by hand. Never push `v1` yourself, and never use it as a release
 tag: two tags on one commit make goreleaser publish twice onto the same release.
 
-`go install github.com/indraoverflow/agentdiet@latest` cannot receive ldflags, so
+`go install github.com/qansaid/agentdiet@latest` cannot receive ldflags, so
 the binary reads its version from the module build info; both install paths must
 report the same tag (see `resolveVersion` in `main.go`).
 

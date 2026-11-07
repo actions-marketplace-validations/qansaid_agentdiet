@@ -75,7 +75,7 @@ release:
     ### Use it as a step
 
     ```yaml
-    - uses: indraoverflow/agentdiet@v1
+    - uses: qansaid/agentdiet@v1
       with:
         max-tokens: 4000   # fail the job above this always-on budget; 0 disables the gate
         window: 200000     # context window for the share column
@@ -106,5 +106,5 @@ release:
     and a budget that fails the pull request that would have made it worse.
 
     MIT licensed. Source, docs, and real sample output:
-    https://github.com/indraoverflow/agentdiet
+    https://github.com/qansaid/agentdiet
 
