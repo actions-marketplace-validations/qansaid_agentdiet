@@ -99,6 +99,90 @@ edge TTL without invalidation will serve the previous build after a release.
 
 ---
 
+## Cloudflare Tunnel (homelab origin)
+
+This is how the production instance at `https://agentdiet.qansa.web.id` runs: the
+Docker image is served on the host, and a pre-existing remotely-managed Cloudflare
+Tunnel publishes it. Nothing listens on a public interface.
+
+```
+Cloudflare edge ──tunnel──▶ cloudflared (host network) ──▶ localhost:4330 ──▶ agentdiet-web
+```
+
+### 1. Build with the real origin baked in
+
+`NEXT_PUBLIC_SITE_URL` is inlined at build time, so it has to be the public origin —
+not a placeholder, or canonical URLs, Open Graph and the sitemap will all point at
+the wrong host.
+
+```bash
+cd website
+docker build --build-arg NEXT_PUBLIC_SITE_URL=https://agentdiet.qansa.web.id \
+  -t agentdiet-site:prod .
+
+docker run -d --name agentdiet-web --restart unless-stopped \
+  -p 4330:3000 agentdiet-site:prod
+```
+
+`--restart unless-stopped` is load-bearing: the site must come back after a reboot
+without anyone logging in.
+
+### 2. Point the tunnel at it
+
+A token-managed tunnel keeps its ingress rules in Cloudflare, not on disk, so the
+only way to add a hostname is the API — and it must **merge**, never replace, or
+every other service on that tunnel goes down with it.
+
+[`deploy/cloudflare-route.py`](./deploy/cloudflare-route.py) does exactly that:
+
+```bash
+export CF_API_TOKEN=...                 # scopes below
+cd website/deploy
+./cloudflare-route.py --dry-run         # prints the merged ingress, writes nothing
+./cloudflare-route.py                   # writes the rule and the proxied CNAME
+```
+
+Token scopes, least privilege:
+
+- Account → Cloudflare Tunnel: Edit
+- Zone (`qansa.web.id`) → DNS: Edit
+- Zone → Zone: Read
+
+Account, tunnel, zone, hostname and service are overridable through
+`CF_ACCOUNT_ID`, `CF_TUNNEL_ID`, `CF_ZONE`, `CF_HOSTNAME` and `CF_SERVICE`.
+`--tunnel-only` and `--dns-only` split the two halves for when a token carries only
+one of the permissions: the DNS record can exist before the ingress rule does, and
+the hostname simply 404s at the edge until both are in place.
+
+The script is idempotent — re-running replaces only this hostname's rule and
+record, and leaves everything else on the tunnel untouched.
+
+### 3. Updating the deployed site
+
+```bash
+cd website
+docker build --build-arg NEXT_PUBLIC_SITE_URL=https://agentdiet.qansa.web.id \
+  -t agentdiet-site:prod .
+docker rm -f agentdiet-web
+docker run -d --name agentdiet-web --restart unless-stopped -p 4330:3000 agentdiet-site:prod
+```
+
+The tunnel rule does not change between deploys, only the origin behind it.
+
+### Notes for this topology
+
+- Next serves HTML with `cache-control: s-maxage=31536000`. Cloudflare does not
+  cache HTML by default (`cf-cache-status: DYNAMIC`), which is what keeps a deploy
+  visible immediately. Do **not** add a "Cache Everything" rule for this hostname
+  without overriding that header for non-static routes first.
+- `http://` redirects to `https://` at the edge while "Always Use HTTPS" is on.
+- A machine that resolved the name before the record existed can keep the NXDOMAIN
+  for the zone's negative TTL (SOA minimum — 1800 s for this zone). That is
+  resolver caching on that machine, not a deployment problem; `resolvectl
+  flush-caches` clears it.
+
+---
+
 ## plain Node
 
 ```bash
