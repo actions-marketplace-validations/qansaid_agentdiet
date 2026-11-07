@@ -2,7 +2,7 @@
 
 **See what your AI coding agent reads before you type a single word — and cut it.**
 
-[![ci](https://github.com/qansa-id/agentdiet/actions/workflows/ci.yml/badge.svg)](https://github.com/qansa-id/agentdiet/actions/workflows/ci.yml)
+[![ci](https://github.com/qansaid/agentdiet/actions/workflows/ci.yml/badge.svg)](https://github.com/qansaid/agentdiet/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![go](https://img.shields.io/badge/go-1.22%2B-00ADD8.svg)](go.mod)
 [![binary](https://img.shields.io/badge/single%20binary-no%20deps-brightgreen.svg)](#install)
@@ -73,11 +73,11 @@ keeps them apart, because only one of them is a bill:
 
 ```bash
 # Go 1.22+
-go install github.com/qansa-id/agentdiet@latest
+go install github.com/qansaid/agentdiet@latest
 ```
 
 Prebuilt binaries for Linux, macOS and Windows (amd64/arm64) are on the
-[releases page](https://github.com/qansa-id/agentdiet/releases).
+[releases page](https://github.com/qansaid/agentdiet/releases).
 
 No runtime, no config file, no network call, no account.
 
@@ -141,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: qansa-id/agentdiet@v1
+      - uses: qansaid/agentdiet@v1
         with:
           max-tokens: 4000
 ```
@@ -151,7 +151,7 @@ Or without the action:
 ```yaml
       - uses: actions/setup-go@v5
         with: { go-version: '1.22' }
-      - run: go install github.com/qansa-id/agentdiet@latest
+      - run: go install github.com/qansaid/agentdiet@latest
       - run: agentdiet --max-tokens 4000
 ```
 
