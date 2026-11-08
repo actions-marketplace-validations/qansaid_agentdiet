@@ -49,7 +49,7 @@ export const tierMeta: Record<
   config: {
     label: "config",
     when: "Declares tools and servers, not instruction text",
-    advice: "Audit the tool surface, not the byte count.",
+    advice: "The MCP configuration inventory is a list of declarations, not a token count.",
     tone: "muted",
   },
   ignored: {
@@ -174,7 +174,7 @@ export const treeRows: TreeRow[] = [
     tokens: 3118,
     lines: 290,
     duplicate: 2389,
-    note: "A hand-maintained copy of AGENTS.md. Both files are injected, so the shared 2,389 tokens are paid for twice on every request.",
+    note: "A hand-maintained copy of AGENTS.md. The two files share 2,389 tokens; whether a runtime loads both depends on the agent. The duplication also guarantees drift.",
   },
   {
     id: "cursorrules",
@@ -196,7 +196,7 @@ export const treeRows: TreeRow[] = [
     tier: "config",
     tokens: 93,
     meta: "6 servers",
-    note: "Six declared servers: github, jira, playwright, postgres, sentry, slack. This is an inventory of declarations. The schema tokens those servers add are not measured here; that depends on the client and its tools.",
+    note: "MCP configuration inventory: six declared servers, github, jira, playwright, postgres, sentry and slack. The schema tokens those servers add are not measured here; that depends on the runtime and connected tools.",
   },
   {
     id: "readme",

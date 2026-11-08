@@ -50,7 +50,7 @@ const moved = [
     to: "a 6-line pointer to AGENTS.md",
   },
   {
-    from: "6 declared MCP servers",
+    from: "MCP configuration inventory: 6 servers",
     to: "github and postgres kept; jira, playwright, sentry, slack removed",
   },
 ];
@@ -72,7 +72,7 @@ const viewCopy = {
     budget: after.budget,
     servers: 2,
     tone: "accent" as const,
-    label: "Instructions were reorganized into the right tiers, while unused MCP servers were removed.",
+    label: "Reference material was reorganized into the right tiers, while unused MCP servers were removed.",
   },
 };
 
@@ -97,7 +97,7 @@ function DuplicateDiagram({ deduped }: { deduped: boolean }) {
         <figure className="overflow-hidden rounded border border-line bg-elevated/30">
           <figcaption className="flex items-center justify-between border-b border-line px-3 py-1.5 font-mono text-[10px] text-faint">
             <span>before · two copies</span>
-            <span className="text-warn">both injected</span>
+            <span className="text-warn">may both load</span>
           </figcaption>
           <div className="grid grid-cols-2 divide-x divide-line">
             {["AGENTS.md", "CLAUDE.md"].map((file) => (
@@ -118,7 +118,7 @@ function DuplicateDiagram({ deduped }: { deduped: boolean }) {
             ))}
           </div>
           <div className="border-t border-line px-3 py-1.5 font-mono text-[9px] text-faint">
-            Pay this paragraph twice on every request, and keep it in sync by hand.
+            Two copies to keep in sync. Whether both load depends on the runtime.
           </div>
         </figure>
 

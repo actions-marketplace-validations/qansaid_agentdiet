@@ -79,7 +79,7 @@ const structuredData = {
   applicationSubCategory: "AI coding agent tooling",
   operatingSystem: "Linux, macOS, Windows",
   description:
-    "A static Go binary that measures the context an AI coding agent loads on every request: always-on instruction files, duplicated rules, oversize files and declared MCP tool surface, and enforces a token budget in CI.",
+    "A static Go binary that measures the context an AI coding agent loads on every request: always-on instruction files, duplicated rules, oversize files and an MCP configuration inventory, and enforces a token budget in CI.",
   url: site.url,
   downloadUrl: links.releases,
   codeRepository: links.repo,

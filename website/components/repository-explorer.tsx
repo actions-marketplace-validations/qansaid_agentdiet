@@ -385,8 +385,8 @@ export function RepositoryExplorer() {
                   </p>
                   <p className="mt-1 text-[11px] leading-[1.5] text-muted">
                     Shared verbatim with{" "}
-                    {selected.id === "agents" ? "CLAUDE.md" : "AGENTS.md"}. Both
-                    copies are injected on every request.
+                    {selected.id === "agents" ? "CLAUDE.md" : "AGENTS.md"}. A
+                    runtime may load both; the audit quantifies the duplicate.
                   </p>
                 </div>
               ) : null}
@@ -427,7 +427,7 @@ export function RepositoryExplorer() {
         <span className="text-warn">always-on · billed</span>
         <span className="text-muted">scoped · subtree</span>
         <span className="text-accent">on-demand · free until opened</span>
-        <span>config · tool surface</span>
+        <span>MCP configuration inventory</span>
         <span className="text-warn">dup · 2,389 shared</span>
         <span className="ml-auto">simulated fixture</span>
       </div>

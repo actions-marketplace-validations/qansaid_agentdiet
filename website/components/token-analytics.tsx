@@ -117,7 +117,7 @@ function DuplicateBar({
 /**
  * Token analytics for the fixture: where the always-on bill comes from, how
  * small it looks against a 200k window, and how much of it is one paragraph
- * paid for twice. Every number is rendered as text; the bars are redundant.
+ * quantified as duplicated content. Every number is rendered as text; the bars are redundant.
  */
 export function TokenAnalytics() {
   return (
@@ -198,9 +198,9 @@ export function TokenAnalytics() {
             to={demo.before.onDemand / total}
           />
           <TierRow
-            label="config · MCP"
+            label="MCP configuration inventory"
             valueText="6 servers"
-            note="inventories declared servers; schema tokens not measured"
+            note="declared servers only; schema tokens depend on the runtime"
             tone="var(--faint)"
             to={0}
             muted
@@ -286,9 +286,9 @@ export function TokenAnalytics() {
           </div>
 
           <p className="mt-3 text-[11px] leading-[1.55] text-muted">
-            AGENTS.md is 100% contained in CLAUDE.md. The agent receives the
-            shared paragraph twice on every request, and hand-syncing the copies
-            is the only thing keeping them equal.
+            AGENTS.md is 100% contained in CLAUDE.md. A runtime may load one or
+            both files; the audit quantifies the duplicate, not the session
+            charge. Hand-syncing the copies is the only thing keeping them equal.
           </p>
 
           <div className="mt-4">

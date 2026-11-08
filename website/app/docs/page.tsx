@@ -48,14 +48,14 @@ const detected = [
   {
     tier: "config",
     files:
-      ".mcp.json · .cursor/mcp.json · .vscode/mcp.json · .claude/settings.json · .codex/config.toml; MCP server names are extracted and reported.",
+      ".mcp.json · .cursor/mcp.json · .vscode/mcp.json · .claude/settings.json · .codex/config.toml; MCP configuration inventory: declared server names are reported, schema tokens are not measured.",
   },
 ];
 
 const findingKinds = [
   {
     kind: "duplicate",
-    what: "A paragraph that appears verbatim in two or more files, with the tokens recoverable by keeping it once.",
+    what: "A paragraph that appears verbatim in two or more files, with the duplicated content quantified. Actual savings depend on which files the runtime loads.",
     fix: "Keep the text in one file and point at it from the others.",
   },
   {
@@ -70,8 +70,8 @@ const findingKinds = [
   },
   {
     kind: "scope",
-    what: "MCP servers declared in the repository. AgentDiet inventories the declarations; it does not measure the schema tokens those servers add.",
-    fix: "Disable servers you do not use in this repo: schema cost scales with tool count.",
+    what: "MCP configuration inventory of declared servers. Actual schema overhead depends on the runtime and the tools it connects; AgentDiet does not measure it.",
+    fix: "Disable servers you do not use in this repo; fewer connected servers means fewer tool schemas.",
   },
 ];
 

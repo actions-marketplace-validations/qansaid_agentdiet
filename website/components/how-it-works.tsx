@@ -14,16 +14,30 @@ import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { steps } from "@/lib/site";
 
-function VisualSkeleton({ label }: { label: string }) {
+function VisualSkeleton() {
+  const [mounted, setMounted] = useState(false);
   const [slow, setSlow] = useState(false);
 
   useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setMounted(true));
     const timer = window.setTimeout(() => setSlow(true), 7000);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
+    };
   }, []);
 
+  // The loading fallback is also rendered during streaming. Keep it out of the
+  // server HTML so a no-JS or pre-hydration document never shows a skeleton
+  // next to the panel it is supposed to replace.
+  if (!mounted) return null;
+
   return (
-    <div className="relative h-[560px] overflow-hidden rounded-lg border border-line bg-surface">
+    <div
+      className="relative h-[560px] overflow-hidden rounded-lg border border-line bg-surface"
+      aria-busy="true"
+      aria-label="Loading interactive panel"
+    >
       <div className="flex items-center justify-between border-b border-line bg-elevated/40 px-3.5 py-2">
         <span className="h-2.5 w-40 rounded-sm bg-line" aria-hidden="true" />
         <span className="h-2.5 w-20 rounded-sm bg-line" aria-hidden="true" />
@@ -67,7 +81,6 @@ function VisualSkeleton({ label }: { label: string }) {
           </button>
         </div>
       ) : null}
-      <span className="sr-only">Loading {label}</span>
     </div>
   );
 }
@@ -108,7 +121,7 @@ const RepositoryExplorer = dynamic(
     import("@/components/repository-explorer").then(
       (module) => module.RepositoryExplorer,
     ),
-  { loading: () => <VisualSkeleton label="repository explorer" /> },
+  { loading: () => <VisualSkeleton /> },
 );
 
 const TokenAnalytics = dynamic(
@@ -116,7 +129,7 @@ const TokenAnalytics = dynamic(
     import("@/components/token-analytics").then(
       (module) => module.TokenAnalytics,
     ),
-  { loading: () => <VisualSkeleton label="token analytics" /> },
+  { loading: () => <VisualSkeleton /> },
 );
 
 const OptimizationComparison = dynamic(
@@ -124,12 +137,12 @@ const OptimizationComparison = dynamic(
     import("@/components/optimization-comparison").then(
       (module) => module.OptimizationComparison,
     ),
-  { loading: () => <VisualSkeleton label="optimization comparison" /> },
+  { loading: () => <VisualSkeleton /> },
 );
 
 const CiPipeline = dynamic(
   () => import("@/components/ci-pipeline").then((module) => module.CiPipeline),
-  { loading: () => <VisualSkeleton label="CI pipeline" /> },
+  { loading: () => <VisualSkeleton /> },
 );
 
 const visuals = [

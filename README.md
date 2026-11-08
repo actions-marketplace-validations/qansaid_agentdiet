@@ -17,11 +17,12 @@
   <a href="https://agentdiet.qansa.web.id"><img src="https://img.shields.io/badge/site-agentdiet.qansa.web.id-3ddc97" alt="Website"></a>
 </p>
 
-**See what your AI coding agent reads before you type a single word, and cut it.**
+**See what your AI coding agent is configured to read before you type a single word, and cut it.**
 
-`agentdiet` is a single static binary that walks a repository, finds every file
-your agent runtime injects into the prompt, and tells you what that costs: per
-request, per 1,000 sessions, and against a budget you can enforce in CI.
+`agentdiet` is a single static binary that discovers recognized AI agent
+instruction files based on supported file conventions and estimates their context
+consumption: per request, per 1,000 sessions, and against a budget you can
+enforce in CI.
 
 ```bash
 go install github.com/qansaid/agentdiet@latest
@@ -77,7 +78,7 @@ NOTE       76,533 tokens sit on demand — 173.2x the always-on tax, and free.
 
 ```mermaid
 flowchart LR
-    S["scan<br/>walk the tree, classify every<br/>instruction file by tier"]
+    S["scan<br/>walk the tree, classify each<br/>recognized instruction file by tier"]
     A["analyze<br/>tokens, cost per 1k sessions,<br/>grade, findings"]
     O["optimize<br/>move reference material out of<br/>always-on into skills and docs"]
     E["enforce<br/>exit 1 in CI when the budget<br/>is exceeded"]
@@ -105,13 +106,15 @@ keeps them apart, because only one of them is a bill:
 | **always-on** | every request, automatically | keep it ruthless; rules only |
 | **scoped** | while editing that subtree | fine, it is proportional to the work |
 | **on-demand** | only when the agent opens it | let it grow; this is where reference material belongs |
-| **config** | declares tools/servers, not text | audit the surface, not the word count |
+| **config** | declares tools/servers, not text | inventory the declarations; do not score their schema |
 
-Measured rather than asserted: over 80 public repositories that keep an
-`AGENTS.md` or `CLAUDE.md` at the root, **16.0%** of all always-on tokens were
-duplicated instructions, and the p90 repository spent 8,446 tokens before the
-prompt even started. Method, distribution and the parts that cut against the
-story are in [docs/field-report.md](docs/field-report.md).
+Measured rather than asserted: across 80 public repositories sampled through
+GitHub code search, **16.0%** of all always-on tokens were duplicated
+instructions, and the p90 repository spent 8,446 tokens before the prompt even
+started. The population is not random, the token counts are estimates, and
+duplication is counted per repository, not per session. Method, distribution and
+the parts that cut against the story are in
+[docs/field-report.md](docs/field-report.md).
 
 ## Install
 
@@ -160,7 +163,7 @@ Recognized without configuration:
 | **always-on** | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `JULES.md`, `.goosehints` at the repo root or in `.claude/` or `.codex/`; `AGENT.md`, `README.agent.md` at the root; `.cursorrules`, `.windsurfrules`, `.clinerules`, `.rules` at the root; `.github/copilot-instructions.md`; `SOUL.md`, `STYLE.md`, `INSTRUCTIONS.md`, `MEMORY.md` inside a Nakama profile workspace (a directory that also contains `SOUL.md`, since Nakama composes all four into the system prompt) |
 | **scoped** | the same instruction filenames in any subdirectory |
 | **on-demand** | `**/skills/**/SKILL.md`, `.cursor/rules/*.mdc`, `.claude/commands/**`, `.github/prompts/**`, `.github/instructions/**`, `.roo/rules/**`, `.continue/rules/**` |
-| **config** | `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.claude/settings.json`, `.codex/config.toml` (MCP server names are extracted and reported) |
+| **config** | `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.claude/settings.json`, `.codex/config.toml` (MCP configuration inventory: declared server names are reported, schema tokens are not measured) |
 
 </details>
 
@@ -173,12 +176,14 @@ as your prompt.
 Beyond the totals, four checks produce the advice:
 
 1. **Verbatim duplication**: the same paragraph in two or more files, with the
-   tokens you would recover by keeping it once. This is the classic
-   `CLAUDE.md`-is-a-stale-copy-of-`AGENTS.md` drift.
+   duplicated content quantified. Actual savings depend on which files the
+   runtime loads. This is the classic `CLAUDE.md`-is-a-stale-copy-of-`AGENTS.md`
+   drift.
 2. **Near-duplicate files**: one instruction file at least 60% contained in another.
 3. **Oversize files**: a single always-on file above 3,000 tokens.
-4. **Tool surface**: MCP servers declared in the repo, whose tool schemas enter
-   the prompt as soon as a session connects.
+4. **MCP configuration inventory**: servers declared in the repo. Actual schema
+   overhead depends on the runtime and the tools it connects; the audit does not
+   measure it.
 
 ## Enforce it in CI
 
