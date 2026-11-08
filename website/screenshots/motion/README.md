@@ -28,7 +28,7 @@ GIF and MP4, silent, captured at native page speed with variable frame timing.
 
 | File | Duration | Content |
 | --- | --- | --- |
-| hero.gif / hero.mp4 | 6.8s | Command typing, scan, findings, report counter |
+| hero.gif / hero.mp4 | 6.4s | Command typing, scan, findings, report counter |
 | repository.gif / repository.mp4 | 3.2s | File discovery, classification, duplicate badges |
 | repository-mobile.gif / repository-mobile.mp4 | 2.0s | The same scan at 390 px |
 | optimize.gif / optimize.mp4 | 3.4s | Before to after counters, bars, grade and dedupe count |

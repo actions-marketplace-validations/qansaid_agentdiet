@@ -26,7 +26,7 @@ export function FinalCta() {
           </div>
 
           <div className="min-w-0">
-            <div className="flex items-center justify-between gap-3 rounded-md border border-line bg-surface px-3 py-2.5">
+            <div className="flex w-fit max-w-full items-center gap-2 rounded-md border border-line bg-surface px-3 py-2.5">
               <code className="min-w-0 overflow-x-auto font-mono text-[11.5px] whitespace-nowrap text-fg/90">
                 <span className="mr-1.5 text-faint select-none">$</span>
                 {installCommand}

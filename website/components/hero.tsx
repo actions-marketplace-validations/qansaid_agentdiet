@@ -69,7 +69,7 @@ export function Hero() {
             </div>
 
             <div className="mt-8 max-w-[440px]">
-              <div className="flex items-center justify-between gap-3 rounded-md border border-line bg-surface/60 px-3 py-2">
+              <div className="flex w-fit max-w-full items-center gap-2 rounded-md border border-line bg-surface/60 px-3 py-2">
                 <code className="min-w-0 overflow-x-auto font-mono text-[11.5px] whitespace-nowrap text-fg/90">
                   <span className="mr-1.5 text-faint select-none">$</span>
                   {installCommand}
