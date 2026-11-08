@@ -274,7 +274,34 @@
   animation: blink 1.15s steps(1, end) infinite;
 }
 
+.motion-note-on {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .motion-note-off {
+    display: none;
+  }
+
+  .motion-note-on {
+    display: inline;
+  }
+
+  /* An explicit replay is user intent, so the hero may run its sequence even
+     when automatic motion is disabled. Everything else stays still. */
+  [data-force-motion="true"] .line-in {
+    animation: line-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+  }
+
+  [data-force-motion="true"] .caret::after {
+    animation: blink 1.15s steps(1, end) infinite !important;
+  }
+
+  [data-force-motion="true"] .pulse-soft {
+    display: inline;
+    animation: soft-pulse 1.4s ease-in-out infinite !important;
+  }
+
   .reveal {
     opacity: 1;
     transform: none;

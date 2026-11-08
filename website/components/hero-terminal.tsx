@@ -89,8 +89,19 @@ export function HeroTerminal() {
     timers.current = [];
   }, []);
 
+  const resetToStart = useCallback(() => {
+    setTyped(0);
+    setScanning(false);
+    setVisibleFiles(0);
+    setEstimating(false);
+    setVisibleFindings(0);
+    setTotals(false);
+    setDone(false);
+  }, []);
+
   const finish = useCallback(() => {
     clearTimers();
+    if (rootRef.current) delete rootRef.current.dataset.forceMotion;
     setTyped(COMMAND.length);
     setScanning(false);
     setEstimating(false);
@@ -100,22 +111,22 @@ export function HeroTerminal() {
     setDone(true);
   }, [clearTimers]);
 
-  const start = useCallback(() => {
+  const start = useCallback((forceMotion = false) => {
+    const node = rootRef.current;
+    if (node) {
+      if (forceMotion) node.dataset.forceMotion = "true";
+      else delete node.dataset.forceMotion;
+    }
+
     clearTimers();
-    setTyped(0);
-    setScanning(false);
-    setVisibleFiles(0);
-    setEstimating(false);
-    setVisibleFindings(0);
-    setTotals(false);
-    setDone(false);
+    resetToStart();
 
     const at = (ms: number, fn: () => void) => {
       timers.current.push(window.setTimeout(fn, ms));
     };
 
     // Type the command one character at a time before the scan starts.
-    const typeStart = 140;
+    const typeStart = 300;
     const perChar = 36;
     COMMAND.split("").forEach((_, i) => {
       at(typeStart + i * perChar, () => setTyped(i + 1));
@@ -145,8 +156,11 @@ export function HeroTerminal() {
       setEstimating(false);
       setTotals(true);
     });
-    at(afterFindings + 780, () => setDone(true));
-  }, [clearTimers]);
+    at(afterFindings + 780, () => {
+      setDone(true);
+      if (rootRef.current) delete rootRef.current.dataset.forceMotion;
+    });
+  }, [clearTimers, resetToStart]);
 
   // Replay from the top whenever the run changes, but only once the panel is
   // on screen and only when motion is allowed.
@@ -155,23 +169,35 @@ export function HeroTerminal() {
     if (!node) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          start();
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 },
-    );
-    observer.observe(node);
+    // Clear the server-rendered final frame before paint so the sequence never
+    // flashes a finished report and then rewinds.
+    resetToStart();
+
+    let observer: IntersectionObserver | null = null;
+
+    // Wait for Chrome's scroll restoration to settle before observing. Without
+    // this, a reload while scrolled down can start the sequence off screen, so
+    // the user finds it already finished when they scroll back up.
+    const armTimer = window.setTimeout(() => {
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            start();
+            observer?.disconnect();
+          }
+        },
+        { threshold: 0.3 },
+      );
+      observer.observe(node);
+    }, 320);
 
     return () => {
-      observer.disconnect();
+      window.clearTimeout(armTimer);
+      observer?.disconnect();
       clearTimers();
     };
-  }, [run, start, clearTimers]);
+  }, [run, start, clearTimers, resetToStart]);
 
   // Keep the newest line in view without animating layout.
   useEffect(() => {
@@ -222,7 +248,7 @@ export function HeroTerminal() {
             type="button"
             onClick={() => {
               if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                finish();
+                start(true);
                 return;
               }
               setRun((n) => n + 1);
@@ -423,7 +449,12 @@ export function HeroTerminal() {
         className="border-t px-4 py-2 font-mono text-[10px]"
         style={{ borderColor: T.border, color: T.faint }}
       >
-        simulated repository · numbers from a real run · nothing is uploaded
+        <span className="motion-note-off">
+          simulated repository · numbers from a real run · nothing is uploaded
+        </span>
+        <span className="motion-note-on">
+          reduced motion is on · use replay to watch the scan
+        </span>
       </div>
 
       <p className="sr-only">
