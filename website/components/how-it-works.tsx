@@ -1,20 +1,50 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useRef, useState, type KeyboardEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { steps } from "@/lib/site";
 
 function VisualSkeleton({ label }: { label: string }) {
   return (
-    <div
-      className="flex h-[560px] items-center justify-center rounded-lg border border-line bg-elevated/20"
-      aria-hidden="true"
-    >
-      <span className="font-mono text-[10px] tracking-wide text-faint uppercase">
-        loading {label}…
-      </span>
+    <div className="h-[560px] overflow-hidden rounded-lg border border-line bg-surface">
+      <div className="flex items-center justify-between border-b border-line bg-elevated/40 px-3.5 py-2">
+        <span className="h-2.5 w-40 rounded-sm bg-line" aria-hidden="true" />
+        <span className="h-2.5 w-20 rounded-sm bg-line" aria-hidden="true" />
+      </div>
+      <div className="grid gap-px bg-line sm:grid-cols-3">
+        {[0, 1, 2].map((index) => (
+          <div key={index} className="bg-surface px-4 py-4">
+            <span className="block h-2 w-16 rounded-sm bg-line" aria-hidden="true" />
+            <span
+              className="mt-2 block h-5 w-24 rounded-sm bg-elevated"
+              aria-hidden="true"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="space-y-3 p-4">
+        {[0, 1, 2, 3].map((index) => (
+          <div key={index} className="space-y-1.5">
+            <div className="flex justify-between">
+              <span className="h-2 w-32 rounded-sm bg-line" aria-hidden="true" />
+              <span className="h-2 w-12 rounded-sm bg-line" aria-hidden="true" />
+            </div>
+            <span
+              className="block h-1.5 rounded-full bg-elevated"
+              aria-hidden="true"
+            />
+          </div>
+        ))}
+      </div>
+      <span className="sr-only">Loading {label}</span>
     </div>
   );
 }
@@ -67,14 +97,35 @@ const loaders = [
 
 export function HowItWorks() {
   const [active, setActive] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
   const warmed = useRef<Set<number>>(new Set());
 
-  function prefetch(index: number) {
+  const prefetch = useCallback((index: number) => {
     if (warmed.current.has(index)) return;
     warmed.current.add(index);
     void loaders[index]?.();
-  }
+  }, []);
+
+  // Warm every panel shortly before the section reaches the viewport, so a tap
+  // on a phone does not wait for a chunk it could have fetched while scrolling.
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          loaders.forEach((_, index) => prefetch(index));
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "320px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [prefetch]);
 
   function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     const last = steps.length - 1;
@@ -94,7 +145,7 @@ export function HowItWorks() {
   const step = steps[active] ?? steps[0]!;
 
   return (
-    <section id="how-it-works" className="scroll-mt-20">
+    <section ref={sectionRef} id="how-it-works" className="scroll-mt-20">
       <div className="mx-auto w-full max-w-[1180px] px-5 py-20 sm:px-8 sm:py-24">
         <SectionHeading
           index="03"
