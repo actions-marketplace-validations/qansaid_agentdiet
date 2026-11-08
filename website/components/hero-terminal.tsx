@@ -377,14 +377,17 @@ export function HeroTerminal() {
               grade {demo.before.grade}
             </span>
             <p className="mt-2 font-mono text-[12px] tabular-nums" style={{ color: T.body }}>
+              <span className="text-[10px]" style={{ color: T.faint }}>
+                est.{" "}
+              </span>
               ${demo.before.cost.toFixed(2)}
               <span className="text-[10px]" style={{ color: T.faint }}>
                 {" "}
-                / 1k sessions
+                / 1K requests
               </span>
             </p>
             <p className="mt-0.5 font-mono text-[10px]" style={{ color: T.faint }}>
-              budget {fmt(demo.before.budget)}
+              one request per session · budget {fmt(demo.before.budget)}
             </p>
           </div>
         </div>
@@ -426,8 +429,9 @@ export function HeroTerminal() {
       <p className="sr-only">
         The simulated acme-platform repository loads 6,770 always-on tokens
         across four instruction files on every request, 3.39% of a 200,000-token
-        window, which is grade C against an 8,000-token budget and costs $20.31
-        per 1,000 sessions at $3.00 per million input tokens. Seven findings
+        window, which is grade C against an 8,000-token budget and an estimated
+        $20.31 per 1,000 requests at $3.00 per million input tokens, assuming one
+        request per session. Seven findings
         include 2,389 tokens duplicated between AGENTS.md and CLAUDE.md.
       </p>
     </div>

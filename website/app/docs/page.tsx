@@ -250,13 +250,18 @@ agentdiet path/to/repo
               The <code>cost</code> line multiplies always-on tokens by{" "}
               <code>--price</code> (default <code>3.00</code> USD per 1M input
               tokens). It is a model of the context, not a claim about your
-              invoice. Change the flag to match your provider&apos;s rate.
+              invoice. Change the flag to match your provider&apos;s rate. The
+              report calls the result cost per 1,000 sessions because it assumes
+              one request per session; read it as the estimated cost per 1,000
+              requests.
             </p>
             <p>
               <code>--json</code> emits the same data with stable keys:{" "}
               <code>alwaysOnTokens</code>, <code>scopedTokens</code>,{" "}
               <code>onDemandTokens</code>, <code>grade</code>,{" "}
-              <code>costPer1kSessionsUSD</code>, <code>files[]</code>,{" "}
+              <code>costPer1kSessionsUSD</code> (the UI labels it estimated cost
+              per 1K requests; one request per session is assumed),{" "}
+              <code>files[]</code>,{" "}
               <code>findings[]</code>, <code>mcpServers[]</code>, plus the estimator
               description and the price used.
             </p>

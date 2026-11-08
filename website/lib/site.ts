@@ -141,7 +141,7 @@ export const steps = [
     id: "analyze",
     label: "Analyze",
     title: "Price the overhead",
-    body: "Tokens per file, share of the context window, cost per 1,000 sessions, and an A–F grade on absolute always-on tokens. Then the findings: verbatim duplicates, near-duplicates, oversize files, declared MCP surface.",
+    body: "Tokens per file, share of the context window, estimated cost per 1,000 requests at one request per session, and an A–F grade on absolute always-on tokens. Then the findings: verbatim duplicates, near-duplicates, oversize files, declared MCP surface.",
     caption: "Absolute thresholds, not percentages of the window: a percentage makes every real repository an A.",
   },
   {
@@ -163,7 +163,7 @@ export const steps = [
 export const faq = [
   {
     q: "What is AgentDiet?",
-    a: "A single static Go binary that walks a repository, finds every file an AI coding agent injects into the prompt, and reports what that costs: per request, per 1,000 sessions, and against a budget you can enforce in CI. It is one binary with no runtime dependencies, no config file and no network call.",
+    a: "A single static Go binary that walks a repository, finds every file an AI coding agent injects into the prompt, and reports what that costs: per request, per 1,000 requests at one request per session, and against a budget you can enforce in CI. It is one binary with no runtime dependencies, no config file and no network call.",
   },
   {
     q: "Why should I care about context consumption?",

@@ -29,10 +29,30 @@ const rows = beforeFiles.map((file) => {
 });
 
 const moved = [
-  { from: "Schema, glossary, endpoint catalog", to: "docs/ · opened when needed" },
-  { from: "Incident and deploy runbooks", to: "skills/ · free until opened" },
-  { from: "The CLAUDE.md copy", to: "a 6-line pointer" },
-  { from: "6 declared MCP servers", to: "2 the repository uses" },
+  {
+    from: "Rules that apply to every change",
+    to: "AGENTS.md · stays always-on, 55 lines",
+  },
+  {
+    from: "Schema, glossary, endpoint catalog",
+    to: "docs/ · on-demand, opened when needed",
+  },
+  {
+    from: "Incident and deploy runbooks",
+    to: "skills/ · on-demand, free until opened",
+  },
+  {
+    from: "Rules for one service",
+    to: "services/*/AGENTS.md · stays scoped",
+  },
+  {
+    from: "The CLAUDE.md copy",
+    to: "a 6-line pointer to AGENTS.md",
+  },
+  {
+    from: "6 declared MCP servers",
+    to: "github and postgres kept; jira, playwright, sentry, slack removed",
+  },
 ];
 
 const viewCopy = {
@@ -268,13 +288,13 @@ export function OptimizationComparison() {
         </div>
         <div className="bg-surface px-4 py-3">
           <p className="font-mono text-[9px] tracking-[0.12em] text-faint uppercase">
-            cost / 1k
+            est. cost / 1K
           </p>
           <p className="mt-1 font-mono text-[23px] leading-none font-medium tracking-[-0.02em] tabular-nums">
             <Count value={current.cost} format={money} />
           </p>
           <p className="mt-1 font-mono text-[9.5px] text-faint">
-            {view === "after" ? `from ${money(before.cost)}` : "at $3.00 per 1M"}
+            {view === "after" ? `from ${money(before.cost)}` : "per 1K requests"}
           </p>
         </div>
         <div className="bg-surface px-4 py-3">
@@ -378,7 +398,9 @@ export function OptimizationComparison() {
       <DuplicateDiagram deduped={view === "after"} />
 
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-elevated/30 px-4 py-2 font-mono text-[9.5px] text-faint">
-        <span>both columns measured on the same fixture, before and after</span>
+        <span>
+          same fixture · one request per session · $3.00 per 1M tokens
+        </span>
         <span className="text-muted">7 findings → 1 · 0 words deleted</span>
       </div>
     </BarScale>

@@ -156,13 +156,13 @@ export function TokenAnalytics() {
         </div>
         <div className="bg-surface px-4 py-3.5">
           <p className="font-mono text-[9px] tracking-[0.12em] text-faint uppercase">
-            cost
+            estimated cost
           </p>
           <p className="mt-1 font-mono text-[26px] leading-none font-medium tracking-[-0.03em] tabular-nums text-fg">
             <Count value={demo.before.cost} format={fmtMoney} />
           </p>
           <p className="mt-1 font-mono text-[10px] text-faint">
-            per 1,000 sessions at $3.00/1M
+            per 1K requests at $3.00/1M
           </p>
         </div>
       </div>
@@ -329,6 +329,7 @@ export function TokenAnalytics() {
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-elevated/30 px-4 py-2 font-mono text-[9.5px] text-faint">
         <span>7 findings · 3 duplicate groups · 2 oversize files</span>
         <span>{fmt(demo.before.onDemand)} on-demand tokens cost nothing until opened</span>
+        <span>cost assumes one request per session</span>
       </div>
     </BarScale>
   );

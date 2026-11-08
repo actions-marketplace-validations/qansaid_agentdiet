@@ -30,7 +30,7 @@ const changes = [
     from: "6 MCP servers",
     to: "2 declared",
     detail:
-      "Four servers the repository never used were removed from .mcp.json, so their tool schemas stop entering the prompt on connect.",
+      "jira, playwright, sentry and slack were removed from .mcp.json, leaving github and postgres. Their tool schemas no longer enter the prompt on connect.",
   },
 ];
 
@@ -67,7 +67,7 @@ function DeltaBand() {
           </p>
         </div>
         <div className="border-t border-line px-5 py-5 sm:border-t-0">
-          <p className="eyebrow">Cost / 1k sessions</p>
+          <p className="eyebrow">Est. cost / 1K requests</p>
           <div className="mt-2 flex items-baseline gap-2 font-mono">
             <span className="text-[15px] text-faint tabular-nums line-through decoration-line-strong">
               ${b.cost.toFixed(2)}
@@ -78,7 +78,7 @@ function DeltaBand() {
             </span>
           </div>
           <p className="mt-1.5 text-[11px] text-faint">
-            at ${demoMeta.price.toFixed(2)} per 1M input tokens
+            at ${demoMeta.price.toFixed(2)} per 1M, one request per session
           </p>
         </div>
       </div>
@@ -229,6 +229,12 @@ export function Example() {
                 <span className="text-fg">synthetic</span>. The before and after
                 figures describe that fixture only. They are not a benchmark, not
                 a survey, and not a promised saving for your codebase.
+              </p>
+              <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
+                The CLI prints its cost line per 1,000 sessions because it assumes
+                one request per session. The labels here call the same figure an
+                estimated cost per 1,000 requests; multiply it by the requests a
+                session actually makes if your workflow differs.
               </p>
               <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
                 The percentage is a consequence of how much duplication the fixture

@@ -2,19 +2,28 @@
 
 import dynamic from "next/dynamic";
 import {
+  Component,
   useCallback,
   useEffect,
   useRef,
   useState,
   type KeyboardEvent,
+  type ReactNode,
 } from "react";
 import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/section-heading";
 import { steps } from "@/lib/site";
 
 function VisualSkeleton({ label }: { label: string }) {
+  const [slow, setSlow] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSlow(true), 7000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="h-[560px] overflow-hidden rounded-lg border border-line bg-surface">
+    <div className="relative h-[560px] overflow-hidden rounded-lg border border-line bg-surface">
       <div className="flex items-center justify-between border-b border-line bg-elevated/40 px-3.5 py-2">
         <span className="h-2.5 w-40 rounded-sm bg-line" aria-hidden="true" />
         <span className="h-2.5 w-20 rounded-sm bg-line" aria-hidden="true" />
@@ -44,9 +53,54 @@ function VisualSkeleton({ label }: { label: string }) {
           </div>
         ))}
       </div>
+      {slow ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-surface/95 px-6 text-center">
+          <p className="font-mono text-[10px] text-muted">
+            This panel is taking longer than expected.
+          </p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="min-h-[26px] rounded border border-line px-2.5 font-mono text-[10px] text-fg transition-colors hover:bg-elevated"
+          >
+            Reload page
+          </button>
+        </div>
+      ) : null}
       <span className="sr-only">Loading {label}</span>
     </div>
   );
+}
+
+class PanelBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    if (this.state.failed) {
+      return (
+        <div className="flex h-[320px] flex-col items-center justify-center gap-3 rounded-lg border border-line bg-surface px-6 text-center">
+          <p className="text-[12.5px] text-muted">
+            This panel could not load.
+          </p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="min-h-[26px] rounded border border-line px-2.5 font-mono text-[10px] text-fg transition-colors hover:bg-elevated"
+          >
+            Reload page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 const RepositoryExplorer = dynamic(
@@ -235,7 +289,7 @@ export function HowItWorks() {
             tabIndex={0}
             className="detail-in min-w-0 outline-none"
           >
-            {visuals[active]}
+            <PanelBoundary key={step.id}>{visuals[active]}</PanelBoundary>
           </div>
         </div>
       </div>

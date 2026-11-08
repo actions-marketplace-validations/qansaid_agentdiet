@@ -249,7 +249,9 @@ export function Problem() {
                 <code className="rounded border border-line bg-surface px-1 py-0.5 font-mono text-[11px] text-fg">
                   --price
                 </code>
-                . It prices the context, not your invoice.
+                . It prices the context, not your invoice. The cost assumes one
+                request per session; the CLI reports the same figure per 1,000
+                sessions, which the site labels as estimated cost per 1K requests.
               </p>
             </div>
           </Reveal>
