@@ -155,14 +155,14 @@ export function TokenAnalytics() {
           </p>
         </div>
         <div className="bg-surface px-4 py-3.5">
-          <p className="font-mono text-[9px] tracking-[0.12em] text-faint uppercase">
-            estimated cost
+          <p className="font-mono text-[9.5px] text-faint">
+            Estimated cost / 1K requests
           </p>
           <p className="mt-1 font-mono text-[26px] leading-none font-medium tracking-[-0.03em] tabular-nums text-fg">
             <Count value={demo.before.cost} format={fmtMoney} />
           </p>
           <p className="mt-1 font-mono text-[10px] text-faint">
-            per 1K requests at $3.00/1M
+            one request per session · $3.00/1M
           </p>
         </div>
       </div>
@@ -200,7 +200,7 @@ export function TokenAnalytics() {
           <TierRow
             label="config · MCP"
             valueText="6 servers"
-            note="not context; tool schemas enter on connect"
+            note="inventories declared servers; schema tokens not measured"
             tone="var(--faint)"
             to={0}
             muted

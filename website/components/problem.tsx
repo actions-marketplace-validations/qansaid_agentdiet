@@ -30,7 +30,7 @@ const patterns = [
   {
     n: "05",
     title: "Excessive MCP tool definitions",
-    body: "Each connected server contributes tool schemas to the prompt as soon as a session opens. Six servers declared for one repo means six surfaces competing for attention.",
+    body: "Each connected server contributes tool schemas to the prompt as soon as a session opens. Six servers declared for one repo means six surfaces competing for attention. The audit inventories the declarations; it does not measure the schema tokens they add.",
     sample: "6 servers declared · schemas enter on connect",
   },
 ];
@@ -251,7 +251,7 @@ export function Problem() {
                 </code>
                 . It prices the context, not your invoice. The cost assumes one
                 request per session; the CLI reports the same figure per 1,000
-                sessions, which the site labels as estimated cost per 1K requests.
+                sessions, which the site labels as Estimated cost / 1K requests.
               </p>
             </div>
           </Reveal>

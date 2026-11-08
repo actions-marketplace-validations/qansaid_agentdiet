@@ -89,7 +89,7 @@ export const tiers = [
 export const capabilities = [
   {
     title: "Repository scanning",
-    body: "Walks the tree, classifies every instruction file into one of four tiers, and skips node_modules, vendor, dist, build and other dependency trees so a vendored AGENTS.md never counts as your prompt.",
+    body: "Walks the tree, classifies each recognized instruction file into one of four tiers, and skips node_modules, vendor, dist, build and other dependency trees so a vendored AGENTS.md never counts as your prompt.",
     evidence: "internal/audit/scan.go",
   },
   {
@@ -114,7 +114,7 @@ export const capabilities = [
   },
   {
     title: "MCP tool surface analysis",
-    body: "Extracts declared server names from the three config dialects in the wild (.mcp.json, .cursor/mcp.json and .vscode/mcp.json), because tool schemas enter the prompt the moment a session connects.",
+    body: "Extracts declared server names from the three config dialects in the wild (.mcp.json, .cursor/mcp.json and .vscode/mcp.json). This inventories the declared surface. It does not measure the schema tokens those servers add, because that depends on the client and the tools it exposes.",
     evidence: "mcpServerNames()",
   },
   {
@@ -163,7 +163,7 @@ export const steps = [
 export const faq = [
   {
     q: "What is AgentDiet?",
-    a: "A single static Go binary that walks a repository, finds every file an AI coding agent injects into the prompt, and reports what that costs: per request, per 1,000 requests at one request per session, and against a budget you can enforce in CI. It is one binary with no runtime dependencies, no config file and no network call.",
+    a: "A single static Go binary that discovers recognized AI agent instruction files based on supported file conventions, and reports what those files cost: per request, per 1,000 requests at one request per session, and against a budget you can enforce in CI. It is one binary with no runtime dependencies, no config file and no network call.",
   },
   {
     q: "Why should I care about context consumption?",

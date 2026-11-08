@@ -70,7 +70,7 @@ const findingKinds = [
   },
   {
     kind: "scope",
-    what: "MCP servers declared in the repository. Their tool schemas enter the prompt as soon as a session connects.",
+    what: "MCP servers declared in the repository. AgentDiet inventories the declarations; it does not measure the schema tokens those servers add.",
     fix: "Disable servers you do not use in this repo: schema cost scales with tool count.",
   },
 ];
@@ -259,8 +259,8 @@ agentdiet path/to/repo
               <code>--json</code> emits the same data with stable keys:{" "}
               <code>alwaysOnTokens</code>, <code>scopedTokens</code>,{" "}
               <code>onDemandTokens</code>, <code>grade</code>,{" "}
-              <code>costPer1kSessionsUSD</code> (the UI labels it estimated cost
-              per 1K requests; one request per session is assumed),{" "}
+              <code>costPer1kSessionsUSD</code> (the UI labels it Estimated cost /
+              1K requests; one request per session is assumed),{" "}
               <code>files[]</code>,{" "}
               <code>findings[]</code>, <code>mcpServers[]</code>, plus the estimator
               description and the price used.

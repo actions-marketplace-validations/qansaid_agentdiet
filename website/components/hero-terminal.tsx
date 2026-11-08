@@ -43,7 +43,7 @@ const findings = [
   { kind: "duplicate", rest: "2,389 tokens · AGENTS.md ↔ CLAUDE.md" },
   { kind: "contained", rest: "AGENTS.md 100% contained in CLAUDE.md" },
   { kind: "oversize", rest: "CLAUDE.md · 3,118 tokens on every request" },
-  { kind: "mcp", rest: "6 servers declared · schemas enter on connect" },
+  { kind: "mcp", rest: "6 servers declared · inventory only" },
 ];
 
 const tierColor: Record<string, string> = {
@@ -402,15 +402,11 @@ export function HeroTerminal() {
             >
               grade {demo.before.grade}
             </span>
-            <p className="mt-2 font-mono text-[12px] tabular-nums" style={{ color: T.body }}>
-              <span className="text-[10px]" style={{ color: T.faint }}>
-                est.{" "}
-              </span>
+            <p className="mt-2 font-mono text-[9.5px]" style={{ color: T.faint }}>
+              Estimated cost / 1K requests
+            </p>
+            <p className="mt-0.5 font-mono text-[13px] tabular-nums" style={{ color: T.body }}>
               ${demo.before.cost.toFixed(2)}
-              <span className="text-[10px]" style={{ color: T.faint }}>
-                {" "}
-                / 1K requests
-              </span>
             </p>
             <p className="mt-0.5 font-mono text-[10px]" style={{ color: T.faint }}>
               one request per session · budget {fmt(demo.before.budget)}

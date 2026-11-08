@@ -72,7 +72,7 @@ const viewCopy = {
     budget: after.budget,
     servers: 2,
     tone: "accent" as const,
-    label: "Reorganized by tier, nothing deleted.",
+    label: "Instructions were reorganized into the right tiers, while unused MCP servers were removed.",
   },
 };
 
@@ -287,14 +287,14 @@ export function OptimizationComparison() {
           </p>
         </div>
         <div className="bg-surface px-4 py-3">
-          <p className="font-mono text-[9px] tracking-[0.12em] text-faint uppercase">
-            est. cost / 1K
+          <p className="font-mono text-[9.5px] text-faint">
+            Estimated cost / 1K requests
           </p>
           <p className="mt-1 font-mono text-[23px] leading-none font-medium tracking-[-0.02em] tabular-nums">
             <Count value={current.cost} format={money} />
           </p>
           <p className="mt-1 font-mono text-[9.5px] text-faint">
-            {view === "after" ? `from ${money(before.cost)}` : "per 1K requests"}
+            {view === "after" ? `from ${money(before.cost)}` : "one request per session"}
           </p>
         </div>
         <div className="bg-surface px-4 py-3">
@@ -401,7 +401,7 @@ export function OptimizationComparison() {
         <span>
           same fixture · one request per session · $3.00 per 1M tokens
         </span>
-        <span className="text-muted">7 findings → 1 · 0 words deleted</span>
+        <span className="text-muted">7 findings → 1 · instruction text kept</span>
       </div>
     </BarScale>
   );

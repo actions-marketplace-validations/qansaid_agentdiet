@@ -196,7 +196,7 @@ export const treeRows: TreeRow[] = [
     tier: "config",
     tokens: 93,
     meta: "6 servers",
-    note: "Six declared servers: github, jira, playwright, postgres, sentry, slack. Tool schemas enter the prompt when a session connects, so the surface costs more than this file suggests.",
+    note: "Six declared servers: github, jira, playwright, postgres, sentry, slack. This is an inventory of declarations. The schema tokens those servers add are not measured here; that depends on the client and its tools.",
   },
   {
     id: "readme",

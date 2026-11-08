@@ -30,7 +30,7 @@ const changes = [
     from: "6 MCP servers",
     to: "2 declared",
     detail:
-      "jira, playwright, sentry and slack were removed from .mcp.json, leaving github and postgres. Their tool schemas no longer enter the prompt on connect.",
+      "jira, playwright, sentry and slack were removed from .mcp.json, leaving github and postgres. The declared surface drops from six servers to two; schema cost depends on the client and is not measured here.",
   },
 ];
 
@@ -67,7 +67,9 @@ function DeltaBand() {
           </p>
         </div>
         <div className="border-t border-line px-5 py-5 sm:border-t-0">
-          <p className="eyebrow">Est. cost / 1K requests</p>
+          <p className="font-mono text-[10px] tracking-[0.06em] text-faint">
+            Estimated cost / 1K requests
+          </p>
           <div className="mt-2 flex items-baseline gap-2 font-mono">
             <span className="text-[15px] text-faint tabular-nums line-through decoration-line-strong">
               ${b.cost.toFixed(2)}
@@ -88,7 +90,8 @@ function DeltaBand() {
           every single request
         </p>
         <p className="font-mono text-[10.5px] text-faint">
-          none of the information was deleted, it moved tiers
+          Instructions were reorganized into the right tiers, while unused MCP
+          servers were removed.
         </p>
       </div>
     </div>
@@ -173,7 +176,7 @@ export function Example() {
                 AFTER
               </span>
               <span className="text-[12.5px] text-muted">
-                Reorganized by tier, with nothing thrown away.
+                Reorganized by tier; unused MCP servers removed.
               </span>
             </div>
             <span className="font-mono text-[11px] text-faint">
@@ -235,6 +238,11 @@ export function Example() {
                 one request per session. The labels here call the same figure an
                 estimated cost per 1,000 requests; multiply it by the requests a
                 session actually makes if your workflow differs.
+              </p>
+              <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
+                MCP findings in that output are an inventory of declared servers.
+                They do not measure how many schema tokens those servers add; that
+                depends on the client and the tools it exposes.
               </p>
               <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
                 The percentage is a consequence of how much duplication the fixture

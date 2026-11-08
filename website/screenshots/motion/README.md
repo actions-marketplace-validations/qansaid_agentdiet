@@ -28,10 +28,10 @@ GIF and MP4, silent, captured at native page speed with variable frame timing.
 
 | File | Duration | Content |
 | --- | --- | --- |
-| hero.gif / hero.mp4 | 6.4s | Command typing, scan, findings, report counter |
+| hero.gif / hero.mp4 | 6.8s | Command typing, scan, findings, report counter |
 | repository.gif / repository.mp4 | 3.2s | File discovery, classification, duplicate badges |
 | repository-mobile.gif / repository-mobile.mp4 | 2.0s | The same scan at 390 px |
-| optimize.gif / optimize.mp4 | 3.4s | Before to after counters, bars, grade and dedupe count |
+| optimize.gif / optimize.mp4 | 3.5s | Before to after counters, bars, grade and dedupe count |
 | ci.gif / ci.mp4 | 5.8s | Stage execution, FAIL at 4,000, PASS at 8,000 |
 
 ## Verification notes
@@ -41,6 +41,9 @@ GIF and MP4, silent, captured at native page speed with variable frame timing.
 - Full-page layout shift on load: 0.0007.
 - Frame pacing during the hero sequence: 59.5 fps average, no frame above 50 ms.
 - Console errors: none.
+- Cost labels use "Estimated cost / 1K requests" and state the one request per
+  session assumption. MCP analysis is described as an inventory of declarations,
+  not a measurement of schema tokens.
 - Reduced motion keeps the hero at its completed state on load. The replay
   control runs the sequence as an explicit action, with the footer noting the
   preference.
