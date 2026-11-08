@@ -132,7 +132,7 @@ export const capabilities = [
 export const steps = [
   {
     id: "scan",
-    label: "Scan",
+    label: "Discover",
     title: "Discover what the agent loads",
     body: "The walker finds instruction files by convention: no config file, no manifest to maintain. Each hit is sorted into always-on, scoped, on-demand or config, because only one of those four tiers is a bill.",
     caption: "No configuration. Convention beats a manifest you forget to update.",

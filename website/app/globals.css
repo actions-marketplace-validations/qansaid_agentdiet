@@ -288,6 +288,183 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Interactive journey — scan reveal, bars, terminal log
+   --------------------------------------------------------------------------- */
+
+/* A bar ships at its real width. JS only arms it below the fold, so a reader
+   without JavaScript (or with reduced motion) sees the measurement, not an
+   empty track. */
+.bar-track {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--fg) 9%, transparent);
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(var(--to, 1));
+  border-radius: inherit;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms);
+  will-change: transform;
+}
+
+[data-bars="pending"] .bar-fill {
+  transform: scaleX(0);
+  transition: none;
+}
+
+[data-bars="on"] .bar-fill {
+  transform: scaleX(var(--to, 1));
+}
+
+.scan-row {
+  transition:
+    opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-scan="pending"] .scan-row {
+  opacity: 0 !important;
+  transform: translate3d(0, 5px, 0);
+  transition: none;
+}
+
+[data-scan="on"] .scan-row {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--row-delay, 0ms);
+}
+
+[data-scan="done"] .scan-row {
+  transition-delay: 0ms;
+}
+
+/* The beam that sweeps down the tree while it is being categorised. */
+.scan-beam {
+  position: absolute;
+  z-index: 10;
+  inset-inline: 0;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--accent) 75%, transparent),
+    transparent
+  );
+  opacity: 0.75;
+  animation: scan-pass 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes scan-pass {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate3d(0, 300px, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-scan="on"] .scan-chip {
+  animation: chip-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) var(--chip-delay, 0ms)
+    both;
+}
+
+@keyframes line-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.line-in {
+  animation: line-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.detail-in {
+  animation: line-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes underline-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.journey-underline {
+  animation: underline-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.pulse-soft {
+  animation: soft-pulse 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar-fill {
+    transition: none !important;
+  }
+
+  .scan-row {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .scan-beam,
+  .pulse-soft,
+  .scan-chip,
+  .line-in,
+  .detail-in,
+  .journey-underline {
+    animation: none !important;
+  }
+
+  .scan-beam,
+  .pulse-soft {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Long-form prose for the docs route
    --------------------------------------------------------------------------- */
 .prose-docs {

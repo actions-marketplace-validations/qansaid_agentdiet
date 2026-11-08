@@ -13,8 +13,8 @@ export function FinalCta() {
         className="pointer-events-none absolute inset-0 dot-bg opacity-40 [mask-image:radial-gradient(60%_80%_at_50%_50%,black,transparent)]"
       />
       <div className="relative mx-auto w-full max-w-[1180px] px-5 py-20 sm:px-8 sm:py-24">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] lg:items-end">
-          <div>
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] lg:items-end">
+          <div className="min-w-0">
             <h2 className="max-w-[18ch] text-[clamp(1.8rem,3.6vw,2.6rem)] leading-[1.06] font-semibold tracking-[-0.03em]">
               Measure it before you optimize it.
             </h2>
@@ -25,7 +25,7 @@ export function FinalCta() {
             </p>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center justify-between gap-3 rounded-md border border-line bg-surface px-3 py-2.5">
               <code className="min-w-0 overflow-x-auto font-mono text-[11.5px] whitespace-nowrap text-fg/90">
                 <span className="mr-1.5 text-faint select-none">$</span>
