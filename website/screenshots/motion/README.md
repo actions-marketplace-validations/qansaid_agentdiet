@@ -1,0 +1,58 @@
+# Motion audit captures
+
+Captured from the production build at 1440x900 (desktop), 390x844 (mobile) and
+834x1112 (tablet) through Chromium over CDP. Every capture was taken after the
+sequence settled, except the recordings, which show the sequence itself.
+
+## Screenshots
+
+| File | State |
+| --- | --- |
+| desktop-hero.png | Hero terminal after the scan completes |
+| desktop-discover.png | Repository explorer, scan complete, duplicate badges |
+| desktop-analyze.png | Token analytics with tier composition |
+| desktop-optimize-before.png | Comparison at 6,770 tokens, grade C |
+| desktop-optimize-after.png | Comparison at 711 tokens, grade A |
+| desktop-enforce-fail.png | CI at a 4,000 budget, FAIL, exit 1 |
+| desktop-enforce-pass.png | CI at an 8,000 budget, PASS, exit 0 |
+| desktop-problem-field-report.png | Field report callout, desktop crop |
+| desktop-example-delta.png | Before to after band with the revised explanation |
+| desktop-example-warning.png | Synthetic fixture and scope warning |
+| mobile-hero.png | Hero at 390 px |
+| mobile-discover.png | Explorer at 390 px |
+| mobile-analyze.png | Analytics at 390 px |
+| mobile-optimize-before.png | Comparison before state at 390 px |
+| mobile-optimize-after.png | Comparison after state at 390 px |
+| mobile-enforce-fail.png | CI failure state at 390 px |
+| mobile-problem-field-report.png | Field report callout at 390 px |
+| mobile-example-delta.png | Before to after band at 390 px |
+| mobile-example-warning.png | Scope warning at 390 px |
+
+## Recordings
+
+GIF and MP4, silent, captured at native page speed with variable frame timing.
+
+| File | Duration | Content |
+| --- | --- | --- |
+| hero.gif / hero.mp4 | 6.8s | Command typing, scan, findings, report counter |
+| repository.gif / repository.mp4 | 3.2s | File discovery, classification, duplicate badges |
+| repository-mobile.gif / repository-mobile.mp4 | 2.0s | The same scan at 390 px |
+| optimize.gif / optimize.mp4 | 3.5s | Before to after counters, bars, grade and dedupe count |
+| ci.gif / ci.mp4 | 5.8s | Stage execution, FAIL at 4,000, PASS at 8,000 |
+
+## Verification notes
+
+- Frame diffs over the kept frames: 15 changed frames in the hero, 7 in the
+  repository scan, 4 in the comparison transition, 18 in the CI run.
+- Full-page layout shift on load: 0.0007.
+- Frame pacing during the hero sequence: 59.5 fps average, no frame above 50 ms.
+- Console errors: none.
+- Cost labels use "Estimated cost / 1K requests" and state the one request per
+  session assumption. MCP analysis is described as an MCP configuration
+  inventory, not a measurement of schema tokens.
+- Duplicate findings quantify shared content. Copy states that actual savings
+  depend on which files the runtime loads, so the capture does not present a
+  per-request guarantee.
+- Reduced motion keeps the hero at its completed state on load. The replay
+  control runs the sequence as an explicit action, with the footer noting the
+  preference.

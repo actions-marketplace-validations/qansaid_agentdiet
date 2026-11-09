@@ -30,7 +30,7 @@ const changes = [
     from: "6 MCP servers",
     to: "2 declared",
     detail:
-      "Four servers the repository never used were removed from .mcp.json, so their tool schemas stop entering the prompt on connect.",
+      "jira, playwright, sentry and slack were removed from .mcp.json, leaving github and postgres. The MCP configuration inventory drops from six servers to two; schema overhead depends on the runtime and connected tools and is not measured here.",
   },
 ];
 
@@ -67,7 +67,9 @@ function DeltaBand() {
           </p>
         </div>
         <div className="border-t border-line px-5 py-5 sm:border-t-0">
-          <p className="eyebrow">Cost / 1k sessions</p>
+          <p className="font-mono text-[10px] tracking-[0.06em] text-faint">
+            Estimated cost / 1K requests
+          </p>
           <div className="mt-2 flex items-baseline gap-2 font-mono">
             <span className="text-[15px] text-faint tabular-nums line-through decoration-line-strong">
               ${b.cost.toFixed(2)}
@@ -78,17 +80,18 @@ function DeltaBand() {
             </span>
           </div>
           <p className="mt-1.5 text-[11px] text-faint">
-            at ${demoMeta.price.toFixed(2)} per 1M input tokens
+            at ${demoMeta.price.toFixed(2)} per 1M, one request per session
           </p>
         </div>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-elevated/40 px-5 py-2.5">
         <p className="font-mono text-[11px] text-muted">
-          <span className="text-accent">{drop.toFixed(1)}%</span> less context on
-          every single request
+          <span className="text-accent">{drop.toFixed(1)}%</span> less always-on
+          context in this fixture
         </p>
         <p className="font-mono text-[10.5px] text-faint">
-          none of the information was deleted, it moved tiers
+          Reference material was reorganized into the right tiers, while unused
+          MCP servers were removed.
         </p>
       </div>
     </div>
@@ -173,7 +176,8 @@ export function Example() {
                 AFTER
               </span>
               <span className="text-[12.5px] text-muted">
-                Reorganized by tier, with nothing thrown away.
+                Reference material reorganized into the right tiers; unused MCP
+                servers removed.
               </span>
             </div>
             <span className="font-mono text-[11px] text-faint">
@@ -228,7 +232,20 @@ export function Example() {
                 This repository is{" "}
                 <span className="text-fg">synthetic</span>. The before and after
                 figures describe that fixture only. They are not a benchmark, not
-                a survey, and not a promised saving for your codebase.
+                a survey, and not a promised saving for your codebase. AgentDiet
+                does not measure agent output quality, before or after.
+              </p>
+              <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
+                The CLI prints its cost line per 1,000 sessions because it assumes
+                one request per session. The labels here call the same figure an
+                estimated cost per 1,000 requests; multiply it by the requests a
+                session actually makes if your workflow differs.
+              </p>
+              <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
+                MCP findings in that output are an MCP configuration inventory.
+                AgentDiet identifies declared server names; it does not measure
+                how many schema tokens those servers add, because that depends on
+                the runtime and the tools it connects.
               </p>
               <p className="mt-2.5 text-[12.5px] leading-[1.65] text-muted">
                 The percentage is a consequence of how much duplication the fixture

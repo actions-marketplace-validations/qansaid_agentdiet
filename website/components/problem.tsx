@@ -1,6 +1,7 @@
 import { SectionHeading } from "@/components/section-heading";
 import { Reveal } from "@/components/reveal";
 import { demo } from "@/lib/demo";
+import { links } from "@/lib/site";
 
 const patterns = [
   {
@@ -12,7 +13,7 @@ const patterns = [
   {
     n: "02",
     title: "Duplicated CLAUDE.md instructions",
-    body: "The same rules under a second filename, kept in sync by hand. Both copies are injected, so every request pays for the paragraph twice and neither file is authoritative.",
+    body: "The same rules under a second filename, kept in sync by hand. A runtime may load both, one, or neither, so the duplicated text is quantified rather than a guaranteed per-request charge. The drift is immediate and certain.",
     sample: "AGENTS.md ↔ CLAUDE.md · 2,389 tokens repeated",
   },
   {
@@ -29,9 +30,9 @@ const patterns = [
   },
   {
     n: "05",
-    title: "Excessive MCP tool definitions",
-    body: "Each connected server contributes tool schemas to the prompt as soon as a session opens. Six servers declared for one repo means six surfaces competing for attention.",
-    sample: "6 servers declared · schemas enter on connect",
+    title: "Unused MCP servers",
+    body: "Each connected server contributes tool schemas to the prompt as soon as a session opens. Six servers declared for one repo means six surfaces competing for attention. The audit inventories the declarations; it does not measure the schema tokens they add.",
+    sample: "6 servers declared · inventory only",
   },
 ];
 
@@ -60,7 +61,7 @@ const tierRows = [
   {
     name: "config",
     when: "Declares tools and servers, not text",
-    advice: "Audit the surface, not the word count.",
+    advice: "Inventory the declarations; do not score their schema.",
     tokens: 0,
     bill: false,
   },
@@ -186,6 +187,23 @@ export function Problem() {
             config&rdquo; collapses these rows and cannot tell you what to do.
             Only the first one is a bill; the rest is inventory.
           </p>
+          <a
+            href={links.fieldReport}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="mt-4 block max-w-[76ch] border-l-2 border-accent/40 pl-3 transition-colors hover:border-accent"
+          >
+            <span>
+              <span className="block text-[12px] text-fg">
+                Field report: 80 public repositories
+              </span>
+              <span className="mt-0.5 block text-[11px] leading-relaxed text-faint">
+                Sampled through GitHub code search, not a random population.
+                Token counts are estimates, and duplication is counted per
+                repository, not per session.
+              </span>
+            </span>
+          </a>
         </Reveal>
 
         <div className="mt-16 grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
@@ -227,15 +245,16 @@ export function Problem() {
                 Duplication is worse than size
               </h3>
               <p className="mt-2 text-[12.5px] leading-[1.6] text-muted">
-                The same paragraph in two files is not redundancy the agent can
-                deduplicate. Both copies arrive in the prompt, every request, and
-                they drift apart the first time someone edits only one.
+                The same paragraph in two files is duplication the agent cannot
+                deduplicate. Whether a runtime loads both depends on the agent;
+                the audit quantifies the duplicated content, and the copies drift
+                apart the first time someone edits only one.
               </p>
               <div className="mt-4">
                 <DuplicateVisual />
               </div>
               <p className="mt-3 font-mono text-[10.5px] leading-relaxed text-faint">
-                2,389 tokens recovered by keeping one copy and pointing at it.
+                2,389 duplicated tokens identified. Actual savings depend on which files the runtime loads.
               </p>
             </div>
 
@@ -249,7 +268,9 @@ export function Problem() {
                 <code className="rounded border border-line bg-surface px-1 py-0.5 font-mono text-[11px] text-fg">
                   --price
                 </code>
-                . It prices the context, not your invoice.
+                . It prices the context, not your invoice. The cost assumes one
+                request per session; the CLI reports the same figure per 1,000
+                sessions, which the site labels as Estimated cost / 1K requests.
               </p>
             </div>
           </Reveal>

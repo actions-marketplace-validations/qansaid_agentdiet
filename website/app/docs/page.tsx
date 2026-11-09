@@ -48,14 +48,14 @@ const detected = [
   {
     tier: "config",
     files:
-      ".mcp.json · .cursor/mcp.json · .vscode/mcp.json · .claude/settings.json · .codex/config.toml; MCP server names are extracted and reported.",
+      ".mcp.json · .cursor/mcp.json · .vscode/mcp.json · .claude/settings.json · .codex/config.toml; MCP configuration inventory: declared server names are reported, schema tokens are not measured.",
   },
 ];
 
 const findingKinds = [
   {
     kind: "duplicate",
-    what: "A paragraph that appears verbatim in two or more files, with the tokens recoverable by keeping it once.",
+    what: "A paragraph that appears verbatim in two or more files, with the duplicated content quantified. Actual savings depend on which files the runtime loads.",
     fix: "Keep the text in one file and point at it from the others.",
   },
   {
@@ -70,8 +70,8 @@ const findingKinds = [
   },
   {
     kind: "scope",
-    what: "MCP servers declared in the repository. Their tool schemas enter the prompt as soon as a session connects.",
-    fix: "Disable servers you do not use in this repo: schema cost scales with tool count.",
+    what: "MCP configuration inventory of declared servers. Actual schema overhead depends on the runtime and the tools it connects; AgentDiet does not measure it.",
+    fix: "Disable servers you do not use in this repo; fewer connected servers means fewer tool schemas.",
   },
 ];
 
@@ -250,13 +250,18 @@ agentdiet path/to/repo
               The <code>cost</code> line multiplies always-on tokens by{" "}
               <code>--price</code> (default <code>3.00</code> USD per 1M input
               tokens). It is a model of the context, not a claim about your
-              invoice. Change the flag to match your provider&apos;s rate.
+              invoice. Change the flag to match your provider&apos;s rate. The
+              report calls the result cost per 1,000 sessions because it assumes
+              one request per session; read it as the estimated cost per 1,000
+              requests.
             </p>
             <p>
               <code>--json</code> emits the same data with stable keys:{" "}
               <code>alwaysOnTokens</code>, <code>scopedTokens</code>,{" "}
               <code>onDemandTokens</code>, <code>grade</code>,{" "}
-              <code>costPer1kSessionsUSD</code>, <code>files[]</code>,{" "}
+              <code>costPer1kSessionsUSD</code> (the UI labels it Estimated cost /
+              1K requests; one request per session is assumed),{" "}
+              <code>files[]</code>,{" "}
               <code>findings[]</code>, <code>mcpServers[]</code>, plus the estimator
               description and the price used.
             </p>

@@ -35,6 +35,8 @@ export const links = {
   readme: "https://github.com/qansaid/agentdiet#readme",
   ci: "https://github.com/qansaid/agentdiet/actions/workflows/ci.yml",
   estimator: "https://github.com/qansaid/agentdiet/blob/main/docs/estimator.md",
+  fieldReport:
+    "https://github.com/qansaid/agentdiet/blob/main/docs/field-report.md",
   star: "https://github.com/qansaid/agentdiet",
   fork: "https://github.com/qansaid/agentdiet/fork",
   security: "https://github.com/qansaid/agentdiet/blob/main/SECURITY.md",
@@ -89,7 +91,7 @@ export const tiers = [
 export const capabilities = [
   {
     title: "Repository scanning",
-    body: "Walks the tree, classifies every instruction file into one of four tiers, and skips node_modules, vendor, dist, build and other dependency trees so a vendored AGENTS.md never counts as your prompt.",
+    body: "Walks the tree, classifies each recognized instruction file into one of four tiers, and skips node_modules, vendor, dist, build and other dependency trees so a vendored AGENTS.md never counts as your prompt.",
     evidence: "internal/audit/scan.go",
   },
   {
@@ -99,7 +101,7 @@ export const capabilities = [
   },
   {
     title: "Duplicate instruction detection",
-    body: "Normalizes paragraphs and reports text that appears in two or more files, with the token count you would recover by keeping it once. The CLAUDE.md-is-a-stale-copy-of-AGENTS.md drift, quantified.",
+    body: "Normalizes paragraphs and reports text that appears in two or more files, quantifying the duplicated content. Actual savings depend on which files the target runtime loads. The CLAUDE.md-is-a-stale-copy drift is quantified, and the drift itself is certain.",
     evidence: "internal/audit/report.go",
   },
   {
@@ -113,8 +115,8 @@ export const capabilities = [
     evidence: "detectFindings()",
   },
   {
-    title: "MCP tool surface analysis",
-    body: "Extracts declared server names from the three config dialects in the wild (.mcp.json, .cursor/mcp.json and .vscode/mcp.json), because tool schemas enter the prompt the moment a session connects.",
+    title: "MCP configuration inventory",
+    body: "Builds an MCP configuration inventory from the config dialects in the wild (.mcp.json, .cursor/mcp.json and .vscode/mcp.json). It identifies declared server names. It does not measure the schema tokens those servers add, because that depends on the runtime and the tools it connects.",
     evidence: "mcpServerNames()",
   },
   {
@@ -132,7 +134,7 @@ export const capabilities = [
 export const steps = [
   {
     id: "scan",
-    label: "Scan",
+    label: "Discover",
     title: "Discover what the agent loads",
     body: "The walker finds instruction files by convention: no config file, no manifest to maintain. Each hit is sorted into always-on, scoped, on-demand or config, because only one of those four tiers is a bill.",
     caption: "No configuration. Convention beats a manifest you forget to update.",
@@ -141,7 +143,7 @@ export const steps = [
     id: "analyze",
     label: "Analyze",
     title: "Price the overhead",
-    body: "Tokens per file, share of the context window, cost per 1,000 sessions, and an A–F grade on absolute always-on tokens. Then the findings: verbatim duplicates, near-duplicates, oversize files, declared MCP surface.",
+    body: "Tokens per file, share of the context window, estimated cost per 1,000 requests at one request per session, and an A–F grade on absolute always-on tokens. Then the findings: duplicated content, near-duplicates, oversize files and the MCP configuration inventory.",
     caption: "Absolute thresholds, not percentages of the window: a percentage makes every real repository an A.",
   },
   {
@@ -163,11 +165,11 @@ export const steps = [
 export const faq = [
   {
     q: "What is AgentDiet?",
-    a: "A single static Go binary that walks a repository, finds every file an AI coding agent injects into the prompt, and reports what that costs: per request, per 1,000 sessions, and against a budget you can enforce in CI. It is one binary with no runtime dependencies, no config file and no network call.",
+    a: "A single static Go binary that discovers recognized AI agent instruction files based on supported file conventions, and reports what those files cost: per request, per 1,000 requests at one request per session, and against a budget you can enforce in CI. It is one binary with no runtime dependencies, no config file and no network call.",
   },
   {
     q: "Why should I care about context consumption?",
-    a: "Instruction files are loaded on every request, before you have typed anything. They grow by accretion, a rule per incident and a table per architecture decision, until the agent spends thousands of tokens of attention on stale instructions and reference material that was never meant to be read every time. Unlike skills, which cost nothing until opened, that context is paid for on every single request.",
+    a: "Always-on instruction files are loaded before you have typed anything, by the runtimes that read them. They grow by accretion, a rule per incident and a table per architecture decision, until the agent spends thousands of tokens of attention on stale instructions and reference material that was never meant to be read every time. Unlike skills, which cost nothing until opened, that context is paid for whenever those files are loaded.",
   },
   {
     q: "Does AgentDiet require an API key?",

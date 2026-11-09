@@ -61,7 +61,7 @@ const points = [
   {
     icon: Workflow,
     title: "Machine-readable output",
-    body: "The action exposes always-on-tokens and grade as step outputs, and --json gives you every file, finding and total if you want your own dashboard instead.",
+    body: "The action exposes always-on-tokens and grade as step outputs, and --json gives you every recognized file, finding and total if you want your own dashboard instead.",
   },
   {
     icon: ShieldCheck,
