@@ -80,6 +80,8 @@ exact.
 3. `gofmt` clean. CI checks it and will fail otherwise.
 4. Conventional commit title: `feat:`, `fix:`, `docs:`, `test:`, `chore:`.
 5. If the change alters output, include the before/after of the affected lines.
+6. Labels are added by path (`documentation`, `website`, `ci`), and a first pull
+   request gets one welcome comment with these checks. No action needed.
 
 ## Releasing
 
