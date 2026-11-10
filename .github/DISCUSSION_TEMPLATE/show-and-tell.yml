@@ -1,0 +1,41 @@
+title: "[grade] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Post the ALWAYS-ON block and the grade line from a real repository. This is
+        the dataset the roadmap is built on: a convention that shows up in twenty
+        repositories gets support before one that shows up in none.
+
+        Run `agentdiet` at the repository root and paste the output. Strip private
+        paths if you need to; keep the numbers.
+  - type: input
+    id: runtime
+    attributes:
+      label: Agent runtime
+      placeholder: "Claude Code 2.x, Cursor 1.7, Codex CLI 0.4, none"
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: ALWAYS-ON block and GRADE line
+      description: Paste from the report. Redact paths, not numbers.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: before-after
+    attributes:
+      label: Did you cut it? Before and after
+      description: Optional. If a change dropped the always-on number, show both lines and what you changed.
+      render: text
+    validations:
+      required: false
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: Optional. Link it only if it is public and you want the case to be reproducible.
+    validations:
+      required: false

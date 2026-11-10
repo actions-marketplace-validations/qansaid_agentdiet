@@ -1,14 +1,18 @@
 name: File not detected
-description: Your agent runtime loads a file that agentdiet does not report.
+description: Your agent runtime loads a file that agentdiet does not report. This is the shortest path to a first pull request.
 title: "detect: "
-labels: ["scope", "needs-triage"]
+labels: ["scope", "help wanted"]
 body:
   - type: markdown
     attributes:
       value: |
         Use this when a file your agent actually loads is missing from the report.
-        If the file *is* reported but with the wrong tier, say so below — that is a
+        If the file *is* reported but with the wrong tier, say so below: that is a
         more serious bug than a missing file.
+
+        The fix is usually three lines: a case in `classify()` in
+        `internal/audit/scan.go`, a fixture in `internal/audit/audit_test.go`, and a
+        row in the README's "What it finds" table. Comment here if you want to write it.
   - type: input
     id: runtime
     attributes:
@@ -39,6 +43,17 @@ body:
     attributes:
       label: Evidence
       description: A link to the runtime's documentation, or the output showing it is loaded. Do not paste private repository contents.
+    validations:
+      required: true
+  - type: dropdown
+    id: pr
+    attributes:
+      label: Do you want to add the case and the fixture yourself?
+      description: A maintainer reviews either way. The change is small enough for a first pull request.
+      options:
+        - I plan to open a pull request
+        - I would rather someone else took it
+        - Not sure yet, explain what the change looks like
     validations:
       required: true
   - type: input

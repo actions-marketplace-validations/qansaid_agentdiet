@@ -3,6 +3,20 @@
 Thanks for taking a look. This tool is deliberately small: a stdlib-only Go
 binary, no runtime dependencies, no network calls. Please keep it that way.
 
+## Where things go
+
+| You have | Put it here |
+|---|---|
+| A file your agent loads that the report misses | [File not detected](https://github.com/qansaid/agentdiet/issues/new?template=file-not-detected.yml) |
+| A finding that fired when it should not | [Finding is wrong or noisy](https://github.com/qansaid/agentdiet/issues/new?template=finding.yml) |
+| A crash, a wrong flag, a wrong exit code | [Bug report](https://github.com/qansaid/agentdiet/issues/new?template=bug.yml) |
+| A question about install, numbers or CI | [Q&A](https://github.com/qansaid/agentdiet/discussions/categories/q-a) |
+| An idea for a convention or a check | [Ideas](https://github.com/qansaid/agentdiet/discussions/categories/ideas) |
+| Numbers from your repository | [Show and tell](https://github.com/qansaid/agentdiet/discussions/categories/show-and-tell) |
+
+Issues are for defects. Questions and proposals start as discussions and become
+issues once the shape is agreed, so nobody writes code against a moving target.
+
 ## Quick start
 
 ```bash
@@ -13,6 +27,24 @@ make run      # audit this repository
 ```
 
 Go 1.22 or newer. Nothing else.
+
+## Good first contributions
+
+Three ways in, in ascending order of effort. File them with the
+`good first issue` label, or claim an open one with a comment.
+
+1. **Post your grade.** Run `agentdiet` in a repository you work in and post the
+   ALWAYS-ON block and the grade in Show and tell. No code, and it decides which
+   conventions get support next.
+2. **Add a missing convention.** One case in `classify()` in
+   `internal/audit/scan.go`, one fixture in `internal/audit/audit_test.go`, one
+   row in the README's "What it finds" table. The tier decision is the hard part:
+   always-on means the runtime injects the file into every request unasked.
+3. **Sharpen a fix string.** Pick advice in `internal/audit/report.go` that still
+   needs research before it can be executed, and rewrite it as an edit or a
+   command. Findings are the product; vague advice is a bug.
+
+Comment on an issue before starting so two people do not write the same patch.
 
 ## What makes a good contribution
 

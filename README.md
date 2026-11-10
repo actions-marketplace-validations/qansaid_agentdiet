@@ -297,8 +297,24 @@ every real repository an A and the grade becomes decoration.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). New file conventions and new findings are
-the two most useful contributions; both come with a test fixture.
+Pick the door that fits:
+
+- **A file your runtime loads is missing from the report.** Open the
+  [file not detected](https://github.com/qansaid/agentdiet/issues/new?template=file-not-detected.yml)
+  form and name the path. If you have twenty minutes, the fix is one case in
+  `classify()` plus a fixture.
+- **A question, or an idea that is not a bug yet.** Ask in
+  [Q&A](https://github.com/qansaid/agentdiet/discussions/categories/q-a) or post
+  it in [Ideas](https://github.com/qansaid/agentdiet/discussions/categories/ideas).
+  Answers stay searchable instead of dying in a closed issue.
+- **Your own numbers.** Post the ALWAYS-ON line and the grade you got in
+  [Show and tell](https://github.com/qansaid/agentdiet/discussions/categories/show-and-tell).
+  A convention that appears in twenty repositories gets support before one that
+  appears in none.
+
+[`good first issue`](https://github.com/qansaid/agentdiet/labels/good%20first%20issue)
+marks the small ones. Read [CONTRIBUTING.md](CONTRIBUTING.md) before your first
+pull request: `make test`, `gofmt`, one change per PR.
 
 ## License
 

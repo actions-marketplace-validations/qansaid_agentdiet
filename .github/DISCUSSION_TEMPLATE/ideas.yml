@@ -1,0 +1,41 @@
+title: "[idea] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        One idea per discussion. The bar is not "is this nice"; it is "which number
+        does this change, and can the reader act on the result". Ideas that survive
+        this shape usually become an issue with a `good first issue` label.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of idea
+      options:
+        - A file convention agentdiet should detect
+        - A new finding (a check with a fix)
+        - Output, flags or exit codes
+        - CI integration, badges or the GitHub Action
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What should agentdiet report or do that it does not today?
+    validations:
+      required: true
+  - type: textarea
+    id: number
+    attributes:
+      label: Which number changes
+      description: The always-on tokens, a grade, a finding, or the exit code. If the answer is "none", say why it still earns its place.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Runtime documentation, a real report, or a repository that shows the problem. Links beat descriptions.
+    validations:
+      required: true

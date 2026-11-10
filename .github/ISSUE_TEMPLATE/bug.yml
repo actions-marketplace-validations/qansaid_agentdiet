@@ -1,0 +1,62 @@
+name: Bug report
+description: A crash, a wrong flag, or behaviour that is not about one specific finding.
+title: "bug: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for anything broken that is not already covered by the other two
+        forms. A wrong number that comes with a finding belongs in
+        "Finding is wrong or noisy"; a file that was never reported belongs in
+        "File not detected".
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The command, and the line that is wrong.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: The number, the grade, or the exit code you were expecting, and why.
+    validations:
+      required: true
+  - type: textarea
+    id: tree
+    attributes:
+      label: Minimal reproducing tree
+      description: Only the files that matter. Do not paste a private repository's contents.
+      placeholder: |
+        .claude/CLAUDE.md          (12 lines)
+        .cursorrules               (40 lines)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: agentdiet --version
+      placeholder: "agentdiet 0.1.5"
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: OS and architecture
+      placeholder: "linux/amd64, macOS arm64, Windows 11"
+    validations:
+      required: true
+  - type: dropdown
+    id: pr
+    attributes:
+      label: Do you want to send the fix yourself?
+      description: Totally fine either way. It tells a maintainer whether to wait or to pick it up.
+      options:
+        - I plan to open a pull request
+        - I would rather someone else took it
+        - Not sure yet, discuss first
+    validations:
+      required: true
