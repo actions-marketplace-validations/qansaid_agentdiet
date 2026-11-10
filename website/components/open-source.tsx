@@ -21,7 +21,7 @@ const cells = [
   {
     label: "Issues",
     value: "Templates",
-    body: "Two focused forms: a file that was not detected, and a finding that looks wrong.",
+    body: "Three defect forms: a file that was not detected, a finding that looks wrong, and a bug. Questions and ideas go to Discussions.",
     href: links.newIssue,
   },
   {

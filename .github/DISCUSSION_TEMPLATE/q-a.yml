@@ -1,0 +1,47 @@
+title: "[question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ask anything about installing, reading the report, or enforcing the budget in
+        CI. Paste the real command and the real output: it is faster than describing
+        them, and it makes the answer useful to the next person who searches.
+  - type: textarea
+    id: command
+    attributes:
+      label: What did you run?
+      description: The exact command, including flags and the target path.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: What did it print?
+      description: Paste the report, or the part that surprised you. Strip private paths if you need to.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: agentdiet --version
+      placeholder: "agentdiet 0.1.5"
+    validations:
+      required: true
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Agent runtime
+      options:
+        - Claude Code
+        - Cursor
+        - Codex CLI
+        - Windsurf
+        - Cline
+        - GitHub Copilot
+        - Several of these
+        - None, I am auditing someone else's repository
+    validations:
+      required: true
