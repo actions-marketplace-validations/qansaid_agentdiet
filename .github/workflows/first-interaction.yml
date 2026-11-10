@@ -1,0 +1,52 @@
+name: first interaction
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      # Runs on pull_request_target, so it never checks out or executes the
+      # contributor's branch. It only needs to read history and post a comment.
+      - uses: actions/first-interaction@v3
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
+            Thanks for the first issue.
+
+            The form asks for the command, the output and `agentdiet --version` because
+            a number without a command cannot be reproduced. If the report is missing
+            any of the three, edit it in rather than opening a second one.
+
+            If this is a question rather than a defect, Q&A in Discussions is the better
+            place and answers stay searchable: https://github.com/qansaid/agentdiet/discussions/categories/q-a
+
+            CONTRIBUTING.md has the routing table and the three good-first contributions.
+            A clear report is already useful, and a number from your repository is the
+            most useful thing anyone can post this week.
+          pr_message: |
+            Thanks for the first pull request.
+
+            Three checks keep review to one round:
+
+            - `make test` passes and `gofmt -l .` prints nothing.
+            - One change per PR.
+            - If the report output moved, the description carries the before and after
+              of the affected lines.
+
+            Paste the tail of `make test` in the description. If this adds a file
+            convention, the fixture belongs in the same PR: a case in `classify()`, a
+            fixture in `audit_test.go`, a row in the README table.
+
+            A maintainer will review within a few days. If you want a second opinion
+            before opening the next one, ask in Q&A:
+            https://github.com/qansaid/agentdiet/discussions/categories/q-a

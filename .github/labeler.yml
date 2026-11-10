@@ -1,0 +1,13 @@
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+
+website:
+  - changed-files:
+      - any-glob-to-any-file: "website/**"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**"
