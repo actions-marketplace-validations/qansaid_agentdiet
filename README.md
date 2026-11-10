@@ -287,11 +287,11 @@ every real repository an A and the grade becomes decoration.
 <br>
 
 - [ ] `--since <ref>`: report the always-on delta introduced by a branch
-- [ ] `.agentdietignore` for repos with generated instruction files
+- [ ] [`.agentdietignore`](https://github.com/qansaid/agentdiet/issues/26) for repos with generated instruction files
 - [ ] exact tokenizer mode behind a build tag
-- [ ] `--explain` to show which blocks a finding matched
+- [ ] [`--explain`](https://github.com/qansaid/agentdiet/issues/27) to show which blocks a finding matched
 - [ ] SARIF output so findings land in the code-scanning tab
-- [ ] per-model window presets (`--model gpt-5`, `--model claude-4.5`)
+- [ ] [per-model window presets](https://github.com/qansaid/agentdiet/issues/25) (`--model gpt-5`, `--model claude-4.5`)
 
 </details>
 
