@@ -12,6 +12,8 @@
 <p align="center">
   <a href="https://github.com/qansaid/agentdiet/releases/latest"><img src="https://img.shields.io/github/v/release/qansaid/agentdiet?style=flat-square&label=release&color=3ddc97" alt="Latest release"></a>
   <a href="https://github.com/qansaid/agentdiet/actions/workflows/ci.yml"><img src="https://github.com/qansaid/agentdiet/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="https://github.com/qansaid/agentdiet"><img src="https://img.shields.io/badge/TDD-enforced-3ddc97?style=flat-square" alt="TDD enforced"></a>
+  <a href="https://github.com/qansaid/agentdiet"><img src="https://img.shields.io/badge/coverage-82%25%2B-brightgreen?style=flat-square" alt="Coverage 82%+"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
   <a href="go.mod"><img src="https://img.shields.io/badge/go-1.22%2B-00ADD8.svg" alt="Go 1.22 or newer"></a>
   <a href="https://agentdiet.qansa.web.id"><img src="https://img.shields.io/badge/site-agentdiet.qansa.web.id-3ddc97" alt="Website"></a>
