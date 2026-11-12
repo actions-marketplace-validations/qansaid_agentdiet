@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   title: "Documentation",
   description:
     "Install AgentDiet, audit a repository, read the report, wire it into CI, and understand how the token estimate is calibrated.",
-  alternates: { canonical: "/docs" },
+  alternates: { canonical: "/docs/" },
   openGraph: {
     title: "AgentDiet documentation",
     description:
       "Install, audit, read the report, enforce a budget in CI, and see how the estimator is calibrated.",
-    url: "/docs",
+    url: "/docs/",
   },
 };
 

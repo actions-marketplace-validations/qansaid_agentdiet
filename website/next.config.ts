@@ -1,10 +1,20 @@
 import type { NextConfig } from "next";
 
+// Two origins share this config. The container build keeps its Node server and
+// its response headers; the GitHub Pages build is a static export, where Next
+// ignores headers() and cannot run middleware. PAGES_EXPORT=1 selects the
+// static one.
+const pagesExport = process.env.PAGES_EXPORT === "1";
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   // Emits .next/standalone so the Docker image does not need node_modules.
-  output: "standalone",
+  output: pagesExport ? "export" : "standalone",
+  images: pagesExport ? { unoptimized: true } : undefined,
+  // Directory-style URLs, so a static host serves /docs/ from docs/index.html
+  // instead of depending on whether it maps /docs to docs.html.
+  trailingSlash: true,
   async headers() {
     return [
       {

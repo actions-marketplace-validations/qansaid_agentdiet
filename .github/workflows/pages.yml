@@ -1,0 +1,77 @@
+name: Pages
+
+# Builds the static export of website/ and publishes it to GitHub Pages.
+# Cloudflare stays in front of the Pages origin and owns the response headers
+# and the rate limit, because Pages serves no custom headers and runs no
+# middleware. See website/DEPLOYMENT.md, section "GitHub Pages (hybrid)".
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install
+        working-directory: website
+        run: npm ci
+
+      # Lint and typecheck run on the normal config; only the build below is
+      # switched to a static export.
+      - name: Lint and typecheck
+        working-directory: website
+        run: npm run lint && npm run typecheck
+
+      - name: Build static export
+        working-directory: website
+        env:
+          PAGES_EXPORT: "1"
+          NEXT_PUBLIC_SITE_URL: "https://agentdiet.qansa.web.id"
+        run: npm run build
+
+      - name: Check the export is servable
+        working-directory: website
+        run: |
+          set -eu
+          for f in out/index.html out/docs/index.html out/404.html out/sitemap.xml out/robots.txt; do
+            test -f "$f" || { echo "missing $f"; exit 1; }
+          done
+          grep -q 'https://agentdiet.qansa.web.id' out/sitemap.xml
+          echo "export ok"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: website/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
