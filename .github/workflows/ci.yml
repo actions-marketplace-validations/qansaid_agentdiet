@@ -6,11 +6,67 @@ on:
   pull_request:
   workflow_dispatch:
 
+# A new push to the same branch makes the previous run irrelevant, so it is
+# cancelled instead of running to completion beside the new one.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
+  # Decides whether anything Go actually changed. The test and goreleaser jobs
+  # still run and still report their required check names; only their heavy
+  # steps are skipped, because a skipped *job* leaves a required check
+  # unsatisfied and blocks the merge.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.filter.outputs.go }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: filter
+        name: Which files changed
+        run: |
+          set -u
+          base=""
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # checkout already fetched full history (fetch-depth: 0), so
+            # origin/<base> exists. A --depth=1 fetch here would move the ref to
+            # a newer commit and hide its history, leaving the merge commit with
+            # no visible common ancestor and breaking the diff below.
+            base="origin/${{ github.base_ref }}"
+          elif [ -n "${{ github.event.before }}" ] && ! printf '%s' "${{ github.event.before }}" | grep -q '^0\+$'; then
+            base="${{ github.event.before }}"
+          fi
+
+          if [ -z "$base" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            # Unknown diff (new branch, forced push, manual run): run the Go
+            # checks rather than risk skipping them.
+            echo "go=true" >> "$GITHUB_OUTPUT"
+            echo "diff unknown, running Go steps"
+            exit 0
+          fi
+
+          if ! git diff --name-only "$base"...HEAD > changed.txt 2>/dev/null; then
+            # Never let a diff problem turn into a failed `changes` job: that
+            # would skip the required Go checks instead of running them.
+            echo "go=true" >> "$GITHUB_OUTPUT"
+            echo "diff failed, running Go steps"
+            exit 0
+          fi
+          echo "changed files:"; sed 's/^/  /' changed.txt
+          if grep -qE '(^|/)(.*\.go|go\.mod|go\.sum|Makefile|action\.ya?ml|\.goreleaser\.ya?ml)$|^scripts/|^\.github/workflows/' changed.txt; then
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          fi
+
   test:
+    needs: changes
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -19,22 +75,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
+        if: needs.changes.outputs.go == 'true'
         with:
           go-version: ${{ matrix.go }}
-          cache: false
+          cache: true
       - name: gofmt
+        if: needs.changes.outputs.go == 'true'
         run: |
           unformatted=$(gofmt -l .)
           if [ -n "$unformatted" ]; then
             echo "gofmt needed on:"; echo "$unformatted"; exit 1
           fi
       - name: vet
+        if: needs.changes.outputs.go == 'true'
         run: go vet ./...
       - name: test
+        if: needs.changes.outputs.go == 'true'
         run: go test ./... -race -count=1 -covermode=atomic -coverprofile=cover.out
       - name: build
+        if: needs.changes.outputs.go == 'true'
         run: go build -trimpath -ldflags="-s -w" -o agentdiet .
       - name: version injection
+        if: needs.changes.outputs.go == 'true'
         # Guard the release ldflags contract: a builder that drops -X main.version
         # must fail here, not ship a binary claiming the wrong version.
         run: |
@@ -43,19 +105,32 @@ jobs:
           echo "binary reports: $got"
           test "$got" = "agentdiet 9.9.9-ci"
       - name: self-audit
+        if: needs.changes.outputs.go == 'true'
         run: ./agentdiet . --json > /dev/null
+      - name: nothing to test
+        if: needs.changes.outputs.go != 'true'
+        # The job has to succeed so the required check stays satisfied; saying
+        # why keeps the green check honest.
+        run: echo "no Go files changed; the Go steps were skipped for this commit"
 
   goreleaser-check:
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-go@v5
+        if: needs.changes.outputs.go == 'true'
         with:
           go-version: "1.24"
+          cache: true
       - uses: goreleaser/goreleaser-action@v6
+        if: needs.changes.outputs.go == 'true'
         with:
           distribution: goreleaser
           version: "~> v2"
           args: check
+      - name: nothing to check
+        if: needs.changes.outputs.go != 'true'
+        run: echo "no Go files changed; goreleaser check was skipped for this commit"

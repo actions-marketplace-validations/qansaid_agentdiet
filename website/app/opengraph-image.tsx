@@ -1,5 +1,9 @@
 import { ImageResponse } from "next/og";
 
+// Static export cannot render this at request time, so the image is generated
+// once during the build.
+export const dynamic = "force-static";
+
 export const alt =
   "AgentDiet: measure the context your AI coding agent loads before you type";
 export const size = { width: 1200, height: 630 };
